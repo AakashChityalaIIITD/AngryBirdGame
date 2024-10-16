@@ -1,9 +1,9 @@
-package com.AngryBirds.Game.gwt;
+package com.AngryBirdsGame.gwt;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.AngryBirds.Game.Main;
+import com.AngryBirdsGame.Main;
 
 /** Launches the GWT application. */
 public class GwtLauncher extends GwtApplication {

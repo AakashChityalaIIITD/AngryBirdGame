@@ -15,13 +15,20 @@
 
   <!-- "Inherits" lines are how GWT knows where to look for code and configuration in other projects or libraries. -->
   <inherits name="com.badlogic.gdx.backends.gdx_backends_gwt" />
-  <inherits name="com.AngryBirds.Game.Main" />
+  <inherits name="Box2DLights" />
+  <inherits name="com.AngryBirdsGame.Main" />
+  <inherits name="com.badlogic.ashley_gwt" />
+  <inherits name="com.badlogic.gdx.ai" />
+  <inherits name="com.badlogic.gdx.controllers" />
+  <inherits name="com.badlogic.gdx.controllers.controllers-gwt" />
   <inherits name="com.badlogic.gdx.physics.box2d.box2d-gwt" />
+  <inherits name="com.crashinvaders.basisu.BasisuGdxGwt" />
+  <inherits name="com.github.tommyettinger.colorful.colorful" />
   <inherits name="dev.lyze.gdxUnBox2d" />
   <inherits name="space.earlygrey.shapedrawer" />
 
   <!-- You must change this if you rename packages later, or rename GwtLauncher. -->
-  <entry-point class="com.AngryBirds.Game.gwt.GwtLauncher" />
+  <entry-point class="com.AngryBirdsGame.gwt.GwtLauncher" />
 
   <!-- You usually won't need to make changes to the rest of this. -->
   <set-configuration-property name="gdx.assetpath" value="../assets" />
