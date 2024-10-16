@@ -8,4 +8,9 @@ public class Main extends Game {
     public void create() {
         setScreen(new FirstScreen());
     }
+
+    @Override
+    public void render() {
+        System.out.println("hello");
+    }
 }
