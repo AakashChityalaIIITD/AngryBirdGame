@@ -109,9 +109,10 @@ public class MainScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // Update the viewport to ensure proper scaling
-        stage.getViewport().update(width, height, true);
-//        background.setSize(stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());  // Resize the background without distortion
+            stage.getViewport().update(width, height, true);
+            Gdx.input.setInputProcessor(stage);
+
+
     }
 
     @Override
