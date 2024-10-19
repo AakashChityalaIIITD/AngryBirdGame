@@ -40,7 +40,7 @@ class LevelScreen implements Screen {
         backButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture("back.png"))));
 
         backButton.setSize(Gdx.graphics.getWidth()/13, Gdx.graphics.getHeight()/13);
-        backButton.setPosition(0, Gdx.graphics.getHeight());
+//        backButton.setPosition(0, Gdx.graphics.getHeight());
 
         Level1=new ImageButton(new SpriteDrawable(new Sprite(new Texture("Level1.png"))));
         Level2=new ImageButton(new SpriteDrawable(new Sprite(new Texture("Level2.png"))));
@@ -48,9 +48,8 @@ class LevelScreen implements Screen {
         table.add(Level1).size(400, 100).padBottom(25).row();
         table.add(Level2).size(400, 100).padBottom(25).row();
         table.add(Level3).size(400, 100).row();
-
-        stage.addActor(backButton);
         stage.addActor(table);
+        stage.addActor(backButton);
 
         Level1.addListener(new ClickListener(){
             @Override
@@ -91,8 +90,12 @@ class LevelScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        backButton.setSize(Gdx.graphics.getWidth()/13, Gdx.graphics.getHeight()/13);
+        backButton.setPosition(Gdx.graphics.getWidth() - backButton.getWidth(), Gdx.graphics.getHeight() - backButton.getHeight());
         batch.begin();
         background.draw(batch);
+        float x=(float)2;
+        backButton.draw(batch,x);
         batch.end();
         stage.act(delta);
         stage.draw();

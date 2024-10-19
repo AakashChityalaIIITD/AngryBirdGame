@@ -37,6 +37,7 @@ public class MainScreen implements Screen {
         background = new Sprite(new Texture("background.jpeg"));
         background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+
         // Adding UI elements
         table = new Table();
         newGameButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture("newgame.png"))));

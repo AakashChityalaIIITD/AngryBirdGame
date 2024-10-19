@@ -38,11 +38,10 @@ class SavedGameScreen implements Screen {
         backButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture("back.png"))));
 
         backButton.setSize(Gdx.graphics.getWidth()/13, Gdx.graphics.getHeight()/13);
-        backButton.setPosition(0, Gdx.graphics.getHeight());
 
-        Game1 = new ImageButton(new SpriteDrawable(new Sprite(new Texture("Level1.png"))));
-        Game2 = new ImageButton(new SpriteDrawable(new Sprite(new Texture("Level2.png"))));
-        Game3 = new ImageButton(new SpriteDrawable(new Sprite(new Texture("Level3.png"))));
+        Game1 = new ImageButton(new SpriteDrawable(new Sprite(new Texture("SavedGame1.jpg"))));
+        Game2 = new ImageButton(new SpriteDrawable(new Sprite(new Texture("SavedGame2.jpg"))));
+        Game3 = new ImageButton(new SpriteDrawable(new Sprite(new Texture("SavedGame3.jpg"))));
 
         table.setFillParent(true);
         table.center();
@@ -92,8 +91,12 @@ class SavedGameScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        backButton.setSize(Gdx.graphics.getWidth()/13, Gdx.graphics.getHeight()/13);
+        backButton.setPosition(Gdx.graphics.getWidth() - backButton.getWidth(), Gdx.graphics.getHeight() - backButton.getHeight());
         batch.begin();
         background.draw(batch);
+        float x=(float)2;
+        backButton.draw(batch,x);
         batch.end();
         stage.act(delta);
         stage.draw();

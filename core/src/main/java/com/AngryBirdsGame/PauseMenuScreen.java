@@ -37,8 +37,34 @@ public class PauseMenuScreen implements Screen {
         table.setFillParent(true);
         table.center();
 
-        SaveButton=new ImageButton(new SpriteDrawable(new Sprite(new Texture("S."))));
+        SaveButton=new ImageButton(new SpriteDrawable(new Sprite(new Texture("SaveGame.jpg"))));
+        BackMainMenuButton=new ImageButton(new SpriteDrawable(new Sprite(new Texture("B."))));
+        ResumeButton=new ImageButton(new SpriteDrawable(new Sprite(new Texture("R"))));
 
+        table.add(ResumeButton).size(400,100).padBottom(25).row();
+        table.add(SaveButton).size(400,100).padBottom(25).row();
+        table.add(BackMainMenuButton);
+
+        stage.addActor(table);
+
+        ResumeButton.addListener(new ClickListener() {
+            @Override
+           public void clicked(InputEvent event, float x, float y) {
+               game.setScreen(new IngameScreen(game));
+           }
+        });
+
+        SaveButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new IngameScreen(game));
+            }
+        });
+
+        BackMainMenuButton.addListener(new ClickListener() {
+           public void clicked(InputEvent event, float x, float y) {
+             game.setScreen(new MainScreen(game));
+           }
+        });
 
 
     }
@@ -49,11 +75,19 @@ public class PauseMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
+        background.draw(batch);
+        batch.end();
+        stage.act(delta);
+        stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
+        background.setSize(width, height);
+        background.setPosition(0, 0);
 
     }
 
