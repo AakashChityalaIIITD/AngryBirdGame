@@ -23,28 +23,33 @@ class LevelScreen implements Screen {
     private ImageButton Level1;
     private ImageButton Level2;
     private ImageButton Level3;
-    private ImageButton Level4;
+    private ImageButton backButton;
     public LevelScreen(Main main){
         this.game=main;
-        this.stage = new Stage(new FitViewport(1000, 650));  // FitViewport maintains aspect ratio
+        this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));  // FitViewport maintains aspect ratio
         Gdx.input.setInputProcessor(stage);
         batch = new SpriteBatch();
         background = new Sprite(new Texture("background.jpeg"));
         background.setPosition(0, 0);
         background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
         table= new Table();
         table.setFillParent(true);
         table.center();
 
-        Level1=new ImageButton(new SpriteDrawable(new Sprite(new Texture("Level1."))));
-        Level2=new ImageButton(new SpriteDrawable(new Sprite(new Texture("Level2."))));
-        Level3=new ImageButton(new SpriteDrawable(new Sprite(new Texture("Level3."))));
-        Level4=new ImageButton(new SpriteDrawable(new Sprite(new Texture("Level4."))));
-        table.add(Level1).size(300, 100).padBottom(25).row();
-        table.add(Level2).size(300, 100).padBottom(25).row();
-        table.add(Level3).size(300, 100).padBottom(25).row();
-        table.add(Level4).size(300, 100).row();
+        backButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture("back.png"))));
 
+        backButton.setSize(Gdx.graphics.getWidth()/13, Gdx.graphics.getHeight()/13);
+        backButton.setPosition(0, Gdx.graphics.getHeight());
+
+        Level1=new ImageButton(new SpriteDrawable(new Sprite(new Texture("Level1.png"))));
+        Level2=new ImageButton(new SpriteDrawable(new Sprite(new Texture("Level2.png"))));
+        Level3=new ImageButton(new SpriteDrawable(new Sprite(new Texture("Level3.png"))));
+        table.add(Level1).size(400, 100).padBottom(25).row();
+        table.add(Level2).size(400, 100).padBottom(25).row();
+        table.add(Level3).size(400, 100).row();
+
+        stage.addActor(backButton);
         stage.addActor(table);
 
         Level1.addListener(new ClickListener(){
@@ -68,14 +73,13 @@ class LevelScreen implements Screen {
                 game.setScreen(new IngameScreen(game));
             }
         });
-        Level4.addListener(new ClickListener(){
+
+        backButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Change to a new screen, e.g., NewGameScreen
-                game.setScreen(new IngameScreen(game));
+                game.setScreen(new MainScreen(game));
             }
         });
-
 
 
     }
@@ -92,7 +96,6 @@ class LevelScreen implements Screen {
         batch.end();
         stage.act(delta);
         stage.draw();
-
     }
 
     @Override

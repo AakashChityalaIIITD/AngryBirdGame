@@ -37,25 +37,20 @@ public class MainScreen implements Screen {
         background = new Sprite(new Texture("background.jpeg"));
         background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        backpace = new ImageButton(new SpriteDrawable(new Sprite(new Texture("backpace.jpg"))));
-        backpace.setHeight((float) (background.getHeight() * 0.75));
-
-        // Center the backpace image on the stage
-        backpace.setPosition((Gdx.graphics.getWidth() - backpace.getWidth()) / 2,
-            (Gdx.graphics.getHeight() - backpace.getHeight()) / 2);
-
         // Adding UI elements
         table = new Table();
         newGameButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture("newgame.png"))));
         LoadSavedGameButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture("laod.png"))));
         ExitButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture("exit.png"))));
 
+
+
         // Positioning buttons in a table
         table.setFillParent(true);  // Ensures the table is sized to the stage
         table.center();  // Centers the table on the stage
-        table.add(newGameButton).size(800, 200).padBottom(-150).row();  // Set size for New Game button
-        table.add(ExitButton).size(800, 200).padBottom(-150).row();  // Set size for Load Saved Game button
-        table.add(LoadSavedGameButton).size(800, 200).row();
+        table.add(newGameButton).size(1000, 200).padBottom(-100).row();  // Set size for New Game button
+        table.add(ExitButton).size(1000, 200).padBottom(-100).row();  // Set size for Load Saved Game button
+        table.add(LoadSavedGameButton).size(1000, 200).row();
 
         // Adding everything to the stage
         //stage.addActor(backpace);  // Add backpace image first to act as the background
@@ -85,6 +80,7 @@ public class MainScreen implements Screen {
                 Gdx.app.exit();
             }
         });
+
     }
 
     @Override

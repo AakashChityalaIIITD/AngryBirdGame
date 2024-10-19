@@ -23,10 +23,11 @@ class SavedGameScreen implements Screen {
     private ImageButton Game1;
     private ImageButton Game2;
     private ImageButton Game3;
+    private ImageButton backButton;
     Table table;
     public SavedGameScreen(Main main){
         this.game=main;
-        this.stage = new Stage(new FitViewport(1000, 650));  // FitViewport maintains aspect ratio
+        this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         Gdx.input.setInputProcessor(stage);
         batch = new SpriteBatch();
         background = new Sprite(new Texture("background.jpeg"));
@@ -34,9 +35,14 @@ class SavedGameScreen implements Screen {
         background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         table= new Table();
 
-        Game1=new ImageButton(new SpriteDrawable(new Sprite(new Texture("img.png"))));
-        Game2=new ImageButton(new SpriteDrawable(new Sprite(new Texture("img.png"))));
-        Game3=new ImageButton(new SpriteDrawable(new Sprite(new Texture("img.png"))));
+        backButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture("back.png"))));
+
+        backButton.setSize(Gdx.graphics.getWidth()/13, Gdx.graphics.getHeight()/13);
+        backButton.setPosition(0, Gdx.graphics.getHeight());
+
+        Game1 = new ImageButton(new SpriteDrawable(new Sprite(new Texture("Level1.png"))));
+        Game2 = new ImageButton(new SpriteDrawable(new Sprite(new Texture("Level2.png"))));
+        Game3 = new ImageButton(new SpriteDrawable(new Sprite(new Texture("Level3.png"))));
 
         table.setFillParent(true);
         table.center();
@@ -45,6 +51,7 @@ class SavedGameScreen implements Screen {
         table.add(Game3).size(300, 100).row();
 
         stage.addActor(table);
+        stage.addActor(backButton);
         Game1.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -64,6 +71,13 @@ class SavedGameScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 // Change to a new screen, e.g., NewGameScreen
                 game.setScreen(new LevelScreen(game));
+            }
+        });
+
+        backButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new MainScreen(game));
             }
         });
 

@@ -17,7 +17,7 @@ public class Main extends Game {
     @Override
     public void create() {
         // Use FitViewport to maintain aspect ratio and avoid distortion
-        viewport = new FitViewport(1000, 650);  // Set your virtual world size
+        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());  // Set your virtual world size
         viewport.apply();
 
         texture = new Texture("image.png");
