@@ -91,7 +91,7 @@ class LevelScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         backButton.setSize(Gdx.graphics.getWidth()/13, Gdx.graphics.getHeight()/13);
-        backButton.setPosition(Gdx.graphics.getWidth() - backButton.getWidth(), Gdx.graphics.getHeight() - backButton.getHeight());
+        backButton.setPosition((float) 0, (float) (Gdx.graphics.getHeight() * 0.9));
         batch.begin();
         background.draw(batch);
         float x=(float)2;

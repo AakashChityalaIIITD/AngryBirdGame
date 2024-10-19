@@ -39,9 +39,9 @@ class SavedGameScreen implements Screen {
 
         backButton.setSize(Gdx.graphics.getWidth()/13, Gdx.graphics.getHeight()/13);
 
-        Game1 = new ImageButton(new SpriteDrawable(new Sprite(new Texture("SavedGame1.jpg"))));
-        Game2 = new ImageButton(new SpriteDrawable(new Sprite(new Texture("SavedGame2.jpg"))));
-        Game3 = new ImageButton(new SpriteDrawable(new Sprite(new Texture("SavedGame3.jpg"))));
+        Game1 = new ImageButton(new SpriteDrawable(new Sprite(new Texture("SavedGame1.png"))));
+        Game2 = new ImageButton(new SpriteDrawable(new Sprite(new Texture("SavedGame2.png"))));
+        Game3 = new ImageButton(new SpriteDrawable(new Sprite(new Texture("SavedGame3.png"))));
 
         table.setFillParent(true);
         table.center();
@@ -92,7 +92,7 @@ class SavedGameScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         backButton.setSize(Gdx.graphics.getWidth()/13, Gdx.graphics.getHeight()/13);
-        backButton.setPosition(Gdx.graphics.getWidth() - backButton.getWidth(), Gdx.graphics.getHeight() - backButton.getHeight());
+        backButton.setPosition((float) 0, (float) (Gdx.graphics.getHeight() * 0.9));
         batch.begin();
         background.draw(batch);
         float x=(float)2;
