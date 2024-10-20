@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class IngameScreen implements Screen {
     private Main game;
+
     public IngameScreen(Main main){
         this.game = main;
     }

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
@@ -20,73 +21,73 @@ public class MainScreen implements Screen {
     private Sprite background;
     private SpriteBatch batch;
     private ImageButton newGameButton;
-    private ImageButton LoadSavedGameButton;
-    private ImageButton ExitButton;
-    private ImageButton backpace;  // Acts as a background image now
-    Table table;
+    private ImageButton loadSavedGameButton;
+    private ImageButton exitButton;
+    private Table table;
+
+    private Texture newGameTexture;
+    private Texture loadTexture;
+    private Texture exitTexture;
 
     public MainScreen(final Main main) {
         this.game = main;
 
-        // Initialize the stage and set it as the input processor
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));  // FitViewport maintains aspect ratio
         Gdx.input.setInputProcessor(stage);
 
         batch = new SpriteBatch();
 
-        background = new Sprite(new Texture("background.jpeg"));
+        background = new Sprite(new Texture("designer.jpeg"));
         background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+        // Load textures for buttons
+        newGameTexture = new Texture("newgame.png");
+        loadTexture = new Texture("load.png");
+        exitTexture = new Texture("exit.png");
 
-        // Adding UI elements
+        // Create ImageButtons
+        newGameButton = new ImageButton(new SpriteDrawable(new Sprite(newGameTexture)));
+        loadSavedGameButton = new ImageButton(new SpriteDrawable(new Sprite(loadTexture)));
+        exitButton = new ImageButton(new SpriteDrawable(new Sprite(exitTexture)));
+
+        // Adding UI elements to the table
         table = new Table();
-        newGameButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture("newgame.png"))));
-        LoadSavedGameButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture("laod.png"))));
-        ExitButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture("exit.png"))));
+        table.setFillParent(true);
+        table.center();
+        table.add(newGameButton).size(200, 100).padBottom(50).row();
+        table.add(loadSavedGameButton).size(200, 100).padBottom(50).row();
+        table.add(exitButton).size(220, 100).row();
 
+        stage.addActor(table);
 
-
-        // Positioning buttons in a table
-        table.setFillParent(true);  // Ensures the table is sized to the stage
-        table.center();  // Centers the table on the stage
-        table.add(newGameButton).size(1000, 200).padBottom(-100).row();  // Set size for New Game button
-        table.add(ExitButton).size(1000, 200).padBottom(-100).row();  // Set size for Load Saved Game button
-        table.add(LoadSavedGameButton).size(1000, 200).row();
-
-        // Adding everything to the stage
-        //stage.addActor(backpace);  // Add backpace image first to act as the background
-        stage.addActor(table);     // Then add the table containing buttons
-
-        // Button listeners
+        // Add click listeners
         newGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Change to a new screen, e.g., NewGameScreen
+
                 game.setScreen(new LevelScreen(game));
             }
         });
 
-        LoadSavedGameButton.addListener(new ClickListener() {
+        loadSavedGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Handle loading a saved game
                 game.setScreen(new SavedGameScreen(game));
             }
         });
 
-        ExitButton.addListener(new ClickListener() {
+        exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Exit the application
                 Gdx.app.exit();
             }
         });
-
     }
+
+
 
     @Override
     public void show() {
-        // This is called when the screen is set, no logic needed here for now
     }
 
     @Override
@@ -94,24 +95,20 @@ public class MainScreen implements Screen {
         // Clear the screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Render the background
         batch.begin();
         background.draw(batch);
         batch.end();
 
-        // Render the stage (e.g., if you add buttons or UI components to the stage)
+        // Render the stage
         stage.act(delta);
         stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-        // Update the viewport
         stage.getViewport().update(width, height, true);
         background.setSize(width, height);
-        background.setPosition(0, 0);
     }
-
 
     @Override
     public void pause() {
@@ -127,9 +124,12 @@ public class MainScreen implements Screen {
 
     @Override
     public void dispose() {
-        // Dispose of resources to avoid memory leaks
+        // Dispose of resources
         stage.dispose();
         batch.dispose();
         background.getTexture().dispose();
+        newGameTexture.dispose();
+        loadTexture.dispose();
+        exitTexture.dispose();
     }
 }
