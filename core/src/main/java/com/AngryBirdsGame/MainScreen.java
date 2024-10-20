@@ -37,7 +37,7 @@ public class MainScreen implements Screen {
 
         batch = new SpriteBatch();
 
-        background = new Sprite(new Texture("designer.jpeg"));
+        background = new Sprite(new Texture("Designer.jpeg"));
         background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // Load textures for buttons

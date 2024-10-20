@@ -30,7 +30,7 @@ class SavedGameScreen implements Screen {
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         Gdx.input.setInputProcessor(stage);
         batch = new SpriteBatch();
-        background = new Sprite(new Texture("background.jpeg"));
+        background = new Sprite(new Texture("Designer.jpeg"));
         background.setPosition(0, 0);
         background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         table= new Table();

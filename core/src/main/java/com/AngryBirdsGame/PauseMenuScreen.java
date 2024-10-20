@@ -27,23 +27,23 @@ public class PauseMenuScreen implements Screen {
     Table table;
     public PauseMenuScreen(Main main){
         this.game=main;
-        this.stage = new Stage(new FitViewport(1000, 650));  // FitViewport maintains aspect ratio
+        this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));  // FitViewport maintains aspect ratio
         Gdx.input.setInputProcessor(stage);
         batch = new SpriteBatch();
-        background = new Sprite(new Texture("background.jpeg"));
+        background = new Sprite(new Texture("Designer.jpeg"));
         background.setPosition(0, 0);
         background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         table= new Table();
         table.setFillParent(true);
         table.center();
 
-        SaveButton=new ImageButton(new SpriteDrawable(new Sprite(new Texture("SaveGame.jpg"))));
-        BackMainMenuButton=new ImageButton(new SpriteDrawable(new Sprite(new Texture("B."))));
-        ResumeButton=new ImageButton(new SpriteDrawable(new Sprite(new Texture("R"))));
+        SaveButton=new ImageButton(new SpriteDrawable(new Sprite(new Texture("SaveGame.png"))));
+        BackMainMenuButton=new ImageButton(new SpriteDrawable(new Sprite(new Texture("SaveGame.png"))));
+        ResumeButton=new ImageButton(new SpriteDrawable(new Sprite(new Texture("SaveGame.png"))));
 
         table.add(ResumeButton).size(400,100).padBottom(25).row();
         table.add(SaveButton).size(400,100).padBottom(25).row();
-        table.add(BackMainMenuButton);
+        table.add(BackMainMenuButton).size(400,100).row();
 
         stage.addActor(table);
 
