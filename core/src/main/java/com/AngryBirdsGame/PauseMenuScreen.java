@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -24,13 +23,16 @@ public class PauseMenuScreen implements Screen {
     private ImageButton ResumeButton;
     private ImageButton BackMainMenuButton;
     private ImageButton SaveButton;
+    private Sprite backgroundTexture;
     Table table;
     public PauseMenuScreen(Main main){
         this.game=main;
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));  // FitViewport maintains aspect ratio
         Gdx.input.setInputProcessor(stage);
         batch = new SpriteBatch();
-        background = new Sprite(new Texture("Designer.jpeg"));
+        backgroundTexture = new Sprite(new Texture("pauseBackground.png"));
+        background = new Sprite(new Texture("GamePage.jpg"));
+
         background.setPosition(0, 0);
         background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         table= new Table();
@@ -50,13 +52,13 @@ public class PauseMenuScreen implements Screen {
         ResumeButton.addListener(new ClickListener() {
             @Override
            public void clicked(InputEvent event, float x, float y) {
-               game.setScreen(new IngameScreen(game));
+               game.setScreen(new VictoryScreen(game));
            }
         });
 
         SaveButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new IngameScreen(game));
+                game.setScreen(new InGameScreen(game));
             }
         });
 
@@ -76,8 +78,11 @@ public class PauseMenuScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        backgroundTexture.setSize(350,428);
+        backgroundTexture.setPosition(Gdx.graphics.getWidth()/2-backgroundTexture.getWidth()/2, Gdx.graphics.getHeight()/2 - backgroundTexture.getHeight()/2);
         batch.begin();
         background.draw(batch);
+       backgroundTexture.draw(batch);
         batch.end();
         stage.act(delta);
         stage.draw();

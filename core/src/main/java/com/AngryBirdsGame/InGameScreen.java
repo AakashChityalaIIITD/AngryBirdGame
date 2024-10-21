@@ -3,7 +3,6 @@ package com.AngryBirdsGame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,14 +10,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 
-public class IngameScreen implements Screen {
+public class InGameScreen implements Screen {
     private Main game;
     private Stage stage;
     private World world;
@@ -34,7 +32,7 @@ public class IngameScreen implements Screen {
     private Sprite pig3;
     private Sprite catapol;
     private ImageButton pause;
-    public IngameScreen(Main main){
+    public InGameScreen(Main main){
         this.game = main;
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));  // FitViewport maintains aspect ratio
         Gdx.input.setInputProcessor(stage);
@@ -88,12 +86,12 @@ public class IngameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float x=20f;
         bird1_red.setPosition(20,108);
-        bird1_red.setSize(50,60);
-        bird2_blue.setSize(50,60);
+        bird1_red.setSize(44,47);
+        bird2_blue.setSize(44,47);
         bird2_blue.setPosition(100,108);
-        bird3_black.setSize(50,60);
+        bird3_black.setSize(42,51);
         bird3_black.setPosition(180,108);
-        catapol.setSize(180,180);
+        catapol.setSize(130,130);
         catapol.setPosition(250,108);
         pause.setSize(50,60);
         pause.setPosition(Gdx.graphics.getWidth()-pause.getWidth(),Gdx.graphics.getHeight()-pause.getHeight());

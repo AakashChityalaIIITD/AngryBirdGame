@@ -55,21 +55,21 @@ class LevelScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Change to a new screen, e.g., NewGameScreen
-                game.setScreen(new IngameScreen(game));
+                game.setScreen(new InGameScreen(game));
             }
         });
         Level2.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Change to a new screen, e.g., NewGameScreen
-                game.setScreen(new IngameScreen(game));
+                game.setScreen(new InGameScreen(game));
             }
         });
         Level3.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Change to a new screen, e.g., NewGameScreen
-                game.setScreen(new IngameScreen(game));
+                game.setScreen(new InGameScreen(game));
             }
         });
 
