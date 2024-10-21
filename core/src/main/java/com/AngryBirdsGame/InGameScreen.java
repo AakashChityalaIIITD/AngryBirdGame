@@ -32,6 +32,17 @@ public class InGameScreen implements Screen {
     private Sprite pig3;
     private Sprite catapol;
     private ImageButton pause;
+    private Sprite brick1;
+    private Sprite brick2;
+    private Sprite brick3;
+    private Sprite brick4;
+    private Sprite brick5;
+    private Sprite brick6;
+    private Sprite brick7;
+    private Sprite brick8;
+    private Sprite brick9;
+    private Sprite brick10;
+    private Sprite brick11;
     public InGameScreen(Main main){
         this.game = main;
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));  // FitViewport maintains aspect ratio
@@ -45,6 +56,16 @@ public class InGameScreen implements Screen {
         pig1=new Sprite(new Texture("pig1.png"));
         pig2=new Sprite(new Texture("pig2.png"));
         pig3=new Sprite(new Texture("pig3.png"));
+        brick1=new Sprite(new Texture("woodenStraightBrick.png"));
+        brick2=new Sprite(new Texture("woodenStraightBrick.png"));
+        brick3=new Sprite(new Texture("woodenStraightBrick.png"));
+        brick4=new Sprite(new Texture("woodenStraightBrick.png"));
+        brick5=new Sprite(new Texture("glassSquare.png"));
+        brick6=new Sprite(new Texture("glassSquare.png"));
+        brick7=new Sprite(new Texture("glassStraightBrick.png"));
+        brick8=new Sprite(new Texture("glassStraightBrick.png"));
+        brick9=new Sprite(new Texture("glassStraightBrick.png"));
+        brick10=new Sprite(new Texture("glassStraightBrick.png"));
         this.world = new World(new Vector2(0f,9.8f), true);
         BodyDef bodyDef = new BodyDef();
         bodyDef.type=BodyDef.BodyType.StaticBody;
