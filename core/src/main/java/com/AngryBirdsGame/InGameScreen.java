@@ -1,7 +1,7 @@
 package com.AngryBirdsGame;
 
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -14,9 +14,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input;
 
 
-public class InGameScreen implements Screen {
+
+
+public class InGameScreen extends ApplicationAdapter implements Screen {
     private Main game;
     private Stage stage;
     private World world;
@@ -97,6 +101,15 @@ public class InGameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.W)){
+            // Your code here to handle when the "W" key is pressed
+            this.game.setScreen(new VictoryScreen(game));
+        }
+        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.L)){
+            // Your code here to handle when the "W" key is pressed
+            this.game.setScreen(new LoseScreen(game));
+        }
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float x=20f;
         bird_red.sprite.setPosition(20,108);
