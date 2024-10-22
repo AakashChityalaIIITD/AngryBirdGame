@@ -40,8 +40,8 @@ public class PauseMenuScreen implements Screen {
         table.center();
 
         SaveButton=new ImageButton(new SpriteDrawable(new Sprite(new Texture("SaveGame.png"))));
-        BackMainMenuButton=new ImageButton(new SpriteDrawable(new Sprite(new Texture("SaveGame.png"))));
-        ResumeButton=new ImageButton(new SpriteDrawable(new Sprite(new Texture("SaveGame.png"))));
+        BackMainMenuButton=new ImageButton(new SpriteDrawable(new Sprite(new Texture("mainmenu.png"))));
+        ResumeButton=new ImageButton(new SpriteDrawable(new Sprite(new Texture("resume.png"))));
 
         table.add(ResumeButton).size(400,100).padBottom(25).row();
         table.add(SaveButton).size(400,100).padBottom(25).row();
@@ -52,7 +52,7 @@ public class PauseMenuScreen implements Screen {
         ResumeButton.addListener(new ClickListener() {
             @Override
            public void clicked(InputEvent event, float x, float y) {
-               game.setScreen(new VictoryScreen(game));
+               game.setScreen(new InGameScreen(game));
            }
         });
 
