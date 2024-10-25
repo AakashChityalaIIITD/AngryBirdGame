@@ -1,7 +1,7 @@
 package com.AngryBirdsGame;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -71,7 +71,6 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         pause.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("clicked");
                 game.setScreen(new PauseMenuScreen(game));
             }
         });

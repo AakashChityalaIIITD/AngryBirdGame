@@ -1,6 +1,7 @@
 package com.AngryBirdsGame;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 class LevelScreen implements Screen {
     private Main game;
     private Stage stage;
+    private Music backgroundMusic;
     private Sprite background;
     private SpriteBatch batch;
     private Table table;
@@ -26,6 +28,8 @@ class LevelScreen implements Screen {
     private ImageButton backButton;
     public LevelScreen(Main main){
         this.game=main;
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Theme.mp3")); // Replace with your MP3 file path
+        backgroundMusic.setLooping(true); // Music will loop continuously
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));  // FitViewport maintains aspect ratio
         Gdx.input.setInputProcessor(stage);
         batch = new SpriteBatch();
@@ -84,7 +88,7 @@ class LevelScreen implements Screen {
     }
     @Override
     public void show() {
-
+        backgroundMusic.play();
     }
 
     @Override
@@ -120,7 +124,7 @@ class LevelScreen implements Screen {
 
     @Override
     public void hide() {
-
+        backgroundMusic.pause();
     }
 
     @Override

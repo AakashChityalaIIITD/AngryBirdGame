@@ -2,8 +2,12 @@ package com.AngryBirdsGame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -11,8 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+
+import java.awt.*;
 
 
 public class PauseMenuScreen implements Screen {
@@ -24,9 +31,15 @@ public class PauseMenuScreen implements Screen {
     private ImageButton BackMainMenuButton;
     private ImageButton SaveButton;
     private Sprite backgroundTexture;
+    private BitmapFont font;
+    private String message;
+    private boolean showMessage = false;
+    private float messageDisplayTime = 2f;
+    private float elapsedTime = 0;
     Table table;
     public PauseMenuScreen(Main main){
         this.game=main;
+        this.font = new BitmapFont();
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));  // FitViewport maintains aspect ratio
         Gdx.input.setInputProcessor(stage);
         batch = new SpriteBatch();
@@ -57,8 +70,9 @@ public class PauseMenuScreen implements Screen {
         });
 
         SaveButton.addListener(new ClickListener() {
+            @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new InGameScreen(game));
+                game.setScreen(new AfterSaveScreen(game));
             }
         });
 
@@ -72,7 +86,25 @@ public class PauseMenuScreen implements Screen {
     }
     @Override
     public void show() {
+        font = new BitmapFont();
+        message = "Game Saved Successfully";
 
+        SaveButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Show the message when SaveButton is clicked
+                showMessage = true;
+                elapsedTime = 0;
+
+                // Timer to switch screens after 2 seconds
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        game.setScreen(new MainScreen(game));
+                    }
+                }, messageDisplayTime);
+            }
+        });
     }
 
     @Override
@@ -82,7 +114,7 @@ public class PauseMenuScreen implements Screen {
         backgroundTexture.setPosition(Gdx.graphics.getWidth()/2-backgroundTexture.getWidth()/2, Gdx.graphics.getHeight()/2 - backgroundTexture.getHeight()/2);
         batch.begin();
         background.draw(batch);
-       backgroundTexture.draw(batch);
+        backgroundTexture.draw(batch);
         batch.end();
         stage.act(delta);
         stage.draw();

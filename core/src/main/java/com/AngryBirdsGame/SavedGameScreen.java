@@ -14,10 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.audio.Music;
 
 class SavedGameScreen implements Screen {
     private Main game;
     private Stage stage;
+    private Music backgroundMusic;
     private Sprite background;
     private SpriteBatch batch;
     private ImageButton Game1;
@@ -27,6 +29,8 @@ class SavedGameScreen implements Screen {
     Table table;
     public SavedGameScreen(Main main){
         this.game=main;
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Theme.mp3")); // Replace with your MP3 file path
+        backgroundMusic.setLooping(true); // Music will loop continuously
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         Gdx.input.setInputProcessor(stage);
         batch = new SpriteBatch();
@@ -85,7 +89,7 @@ class SavedGameScreen implements Screen {
 
     @Override
     public void show() {
-
+        backgroundMusic.play();
     }
 
     @Override
@@ -121,7 +125,7 @@ class SavedGameScreen implements Screen {
 
     @Override
     public void hide() {
-
+        backgroundMusic.pause();
     }
 
     @Override
