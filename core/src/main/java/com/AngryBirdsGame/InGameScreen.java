@@ -34,7 +34,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
     private fattyPig pig_fatty;
     private smallpig pig_smallpig;
     private kingpig pig_king;
-    private Sprite catapol;
+    private catapol cata;
     private ImageButton pause;
     private woodenBrick brick_wooden1;
     private woodenBrick brick_wooden2;
@@ -52,7 +52,6 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         bird_red=new RedAngryBird();
         bird_blue=new BlueAngryBird();
         bird_black=new BlackAngryBird();
-        catapol=new Sprite(new Texture("Catapol.png"));
         pig_fatty=new fattyPig();
         pig_king=new kingpig();
         pig_smallpig=new smallpig();
@@ -63,6 +62,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         glass_block1=new GlassBlock();
         glass_block2=new GlassBlock();
         steel_block=new SteelBlock();
+        cata=new catapol();
         this.world = new World(new Vector2(0f,9.8f), true);
         BodyDef bodyDef = new BodyDef();
         bodyDef.type=BodyDef.BodyType.StaticBody;
@@ -137,8 +137,8 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         bird_blue.sprite.setPosition(100,108);
         bird_black.sprite.setSize(42,51);
         bird_black.sprite.setPosition(180,108);
-        catapol.setSize(130,130);
-        catapol.setPosition(250,108);
+        cata.sprite.setSize(130,130);
+        cata.sprite.setPosition(250,108);
         pause.setSize(50,60);
         pause.setPosition(Gdx.graphics.getWidth()-pause.getWidth(),Gdx.graphics.getHeight()-pause.getHeight());
         batch.begin();
@@ -157,7 +157,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         glass_block1.sprite.draw(batch);
         steel_block.sprite.draw(batch);
         pig_smallpig.sprite.draw(batch);
-        catapol.draw(batch);
+        cata.sprite.draw(batch);
         batch.end();
         world.step(1/60f,6,2);
         stage.act(delta);
