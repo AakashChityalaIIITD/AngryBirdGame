@@ -159,6 +159,8 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
 
 
     public InGameScreen(Main main){
+        world = new World(new Vector2(0, -9.81f), true);
+        bodies = new ArrayList<Body>();
         this.game = main;
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));  // FitViewport maintains aspect ratio
         Gdx.input.setInputProcessor(stage);
@@ -182,7 +184,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         bodies.add(pig_fatty.body);
         pig_king=new kingpig();
         pig_king.sprite.setPosition(890,108+90+20+10);
-        pig_king.body=create3(pig_fatty,BodyDef.BodyType.DynamicBody,1f,0.5f,0.3f);
+        pig_king.body=create3(pig_king,BodyDef.BodyType.DynamicBody,1f,0.5f,0.3f);
         bodies.add(pig_king.body);
         pig_smallpig=new smallpig();
         pig_smallpig.sprite.setPosition(860,108);
@@ -221,7 +223,6 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         cata.sprite.setPosition(250,108);
         cata.body = create1(cata, BodyDef.BodyType.StaticBody, 1f, 0.5f, 0.1f);
         bodies.add(cata.body);
-
         stage.addActor(pause);
         pause.addListener(new ClickListener() {
             @Override
@@ -232,7 +233,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
 
         batch = new SpriteBatch();
         background = new Sprite(new Texture("GamePage.jpg"));
-        this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));  // FitViewport maintains aspect ratio
+        //this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));  // FitViewport maintains aspect ratio
 
     }
     @Override
@@ -345,6 +346,8 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
 
     @Override
     public void dispose() {
-        world.dispose();
+        world.dispose();  // Dispose the world to free memory
+        batch.dispose();  // Dispose the SpriteBatch
+        stage.dispose();
     }
 }
