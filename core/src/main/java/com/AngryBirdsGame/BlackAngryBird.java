@@ -10,6 +10,10 @@ public class BlackAngryBird extends AngryBird{
     public BlackAngryBird(){
         super("Blacky",0,0,new Sprite(new Texture("Black.png")));
         this.sprite = new Sprite(new Texture("Black.png"));
+        this.speed=1.2f;
+        this.impact=2;
+        sprite.setSize(42,51);
+
     }
     public Sprite getSprite(){
         return sprite;

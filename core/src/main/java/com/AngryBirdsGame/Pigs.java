@@ -3,22 +3,20 @@ package com.AngryBirdsGame;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.Body;
 
-class AngryBird {
-    public String name;
+public class Pigs {
     private int posX;
     private int posY;
     public Sprite sprite;
-    public int impact;
-    public float speed;
+    public int health;
     public Body body;
 
-    public AngryBird(String name,int posX,int posY,Sprite sprite){
-        this.name=name;
-        this.posX=posX;
-        this.posY=posY;
-        this.sprite=sprite;
-
+    public Pigs(int posX, int posY, Sprite sprite) {
+        this.posX = posX;
+        this.posY = posY;
+        this.sprite = sprite;
     }
+
+
 
     public void updateSprite(float delta){
         sprite.setPosition(body.getPosition().x*delta - sprite.getWidth()/2, body.getPosition().y*delta - sprite.getHeight()/2);
@@ -40,5 +38,4 @@ class AngryBird {
     public Sprite getSprite(){
         return sprite;
     }
-
 }

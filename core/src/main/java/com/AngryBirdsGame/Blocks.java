@@ -1,19 +1,26 @@
 package com.AngryBirdsGame;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.physics.box2d.Body;
 
 public class Blocks {
 
     public String name;
+    public Sprite sprite;
     private int posX;
     private int posY;
     private int durability;
+    public Body body;
 
     public Blocks(String name,int posX,int posY,int durability){
         this.name=name;
         this.posX=posX;
         this.posY=posY;
         this.durability=durability;
+    }
+    public void updateSprite(float delta){
+        sprite.setPosition(body.getPosition().x*delta - sprite.getWidth()/2, body.getPosition().y*delta - sprite.getHeight()/2);
+        sprite.setRotation((float) Math.toDegrees(body.getAngle()));
     }
     public void setPosX(int posX){
         this.posX=posX;
