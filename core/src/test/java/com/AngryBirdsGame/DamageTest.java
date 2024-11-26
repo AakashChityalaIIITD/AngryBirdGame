@@ -18,13 +18,13 @@ class DamageTest {
     void getDamage_Pig() {
         int h= pig.health;
         pig.takeDamage(4);
-        assertEquals(1,pig.health);
+        assertEquals(1,pig.getHealth());
     }
 
     @Test
     void getDamage_Block() {
         block.takeDamage(4);
-        assertEquals(11,block.durability);
+        assertEquals(11,block.getDurability());
     }
 
 }

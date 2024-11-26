@@ -32,6 +32,9 @@ public class Pigs {
     public boolean isDead() {
         return health <= 0;
     }
+    public int getHealth(){
+        return this.health;
+    }
 
 
     public void setPosX(int posX){

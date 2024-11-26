@@ -20,7 +20,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
-
+class BirdFactory3 {
+    public static AngryBird createBird(int type) {
+        switch (type) {
+            case 1: return new RedAngryBird();
+            case 2: return new BlackAngryBird();
+            case 3: return new BlueAngryBird();
+            default: return new BlueAngryBird();
+        }
+    }
+}
 public class InGameScreen extends ApplicationAdapter implements Screen {
     private Main game;
     private final List<Body> bodiesToDestroy = new ArrayList<Body>();
@@ -639,15 +648,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         bird_cnt--;
         if (cntr > 0) {
             cntr--; // Decrement counter for the next bird
-            if (bird_black.body != null) {
-                bodiesToDestroy.add(bird_black.body); // Destroy the previous bird’s body
-            }
-
-            if (cntr == 1) {
-                bird_black = new RedAngryBird();
-            } else if (cntr == 0) {
-                bird_black = new BlueAngryBird();
-            }
+            bird_black = BirdFactory3.createBird(cntr); // Create the next bird using factory method
             bird_black.sprite.setSize(42, 51);
             bird_black.sprite.setPosition(250, 108); // Reset position above the catapult
             bird_black.body = createBody(bird_black, BodyDef.BodyType.DynamicBody); // Create the new body

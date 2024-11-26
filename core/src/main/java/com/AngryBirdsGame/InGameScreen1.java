@@ -18,8 +18,21 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+
+//Design Pattern 1.) Factory Class Method
+class BirdFactory2 {
+    public static AngryBird createBird(int type) {
+        switch (type) {
+            case 1: return new RedAngryBird();
+            case 2: return new BlackAngryBird();
+            case 3: return new BlueAngryBird();
+            default: return new BlueAngryBird();
+        }
+    }
+}
 
 public class InGameScreen1 extends ApplicationAdapter implements Screen {
     private Main game;
@@ -28,6 +41,18 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
     private Stage stage;
     private World world;
     int cntr = 2;
+
+    private List<Pigs> pigs;
+
+    boolean chk;
+
+    private List<woodenBrick> woodenBlocks;
+    private List<GlassBlock> glassBlocks;
+    private List<SteelBlock> steelBlocks;
+    private List<AngryBird> birds;
+
+
+
     private SpriteBatch batch;
     private Sprite background;
     private Body groundBody; // Box2D body for ground
@@ -40,6 +65,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
     private SteelBlock brick_steel;
     int bird_cnt=3;
     int pig_cntr=1;
+    private GameHandler gameHandler;
     private smallpig pig_smallpig;
     private kingpig pig_king;
     private fattyPig pig_fatty;
@@ -53,6 +79,15 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
         this.batch = new SpriteBatch();
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         Gdx.input.setInputProcessor(stage);
+
+        pigs = new ArrayList<Pigs>();
+        steelBlocks = new ArrayList<SteelBlock>();
+        woodenBlocks = new ArrayList<woodenBrick>();
+        glassBlocks = new ArrayList<GlassBlock>();
+        birds = new ArrayList<AngryBird>();
+
+        gameHandler = new GameHandler("gameSave1.dat");
+        chk = gameHandler.loadGameState(pigs, woodenBlocks, glassBlocks, steelBlocks, birds);
 
 
         this.world = new World(new Vector2(0f, -9.8f), true);
@@ -113,7 +148,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (isDragging && bird_black != null) {
                     isDragging = false;
-                    Vector2 launchVelocity = calculateLaunchVelocity(x, y);
+                    Vector2 launchVelocity = calculateLaunchVelocity(x,y);
                     bird_black.body.setLinearVelocity(launchVelocity);
                     bird_black.body.setAwake(true);
                     black_bird_flight = 1;
@@ -346,28 +381,116 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
 
     private void initializeObstacles() {
         // Initialize pigs
-        pig_smallpig = new smallpig();
-        pig_smallpig.sprite.setPosition(860, 108);
-        pig_smallpig.sprite.setSize(65, 68);
-        pig_smallpig.body = createBody2(pig_smallpig, BodyDef.BodyType.DynamicBody);
+        if (chk) {
+            List<GameState.PigState> p = gameHandler.loadPigs();
+            System.out.println(p.size());
+            List<GameState.BlockState> b = gameHandler.loadBlocks();
+            for (GameState.PigState pig : p) {
+                if(pig.x==-1 && pig.y==-1){
+                    pig_smallpig = new smallpig();
+                    pig_smallpig.sprite=null;
+                    bodiesToDestroy.add(pig_smallpig.body);
+                    pigs.add(pig_smallpig);
+                }
+                else {
+                    pig_smallpig = new smallpig();
+                    pig_smallpig.sprite.setPosition(pig.x, pig.y);
+                    pig_smallpig.sprite.setSize(65, 68);
+                    pig_smallpig.body = createBody2(pig_smallpig, BodyDef.BodyType.DynamicBody);
+                    pigs.add(pig_smallpig);
+                }
+            }
+            int iter=0;
+            for(GameState.BlockState blck:b){
+                if(iter==0) {
+
+                    if (blck.x == -1 && blck.y == -1) {
+                        brick_wood1 = new woodenBrick();
+                        brick_wood1.sprite=null;
+                        bodiesToDestroy.add(brick_wood1.body);
+                        woodenBlocks.add(brick_wood1);
+                    }
+                    else{
+                        brick_wood1 = new woodenBrick();
+                        brick_wood1.sprite.setPosition(blck.x, blck.y);
+                        brick_wood1.sprite.setSize(20, 80);
+                        brick_wood1.body = createBody3(brick_wood1, BodyDef.BodyType.DynamicBody);
+
+                        woodenBlocks.add(brick_wood1);
+                    }
+                }
+                else if(iter==1){
+
+                    if (blck.x == -1 && blck.y == -1) {
+                        brick_wood2 = new woodenBrick();
+                        brick_wood2.sprite=null;
+                        bodiesToDestroy.add(brick_wood2.body);
+
+                        woodenBlocks.add(brick_wood2);
+
+                    }
+                    else{
+                        brick_wood2 = new woodenBrick();
+                        brick_wood2.sprite.setPosition(blck.x, blck.y);
+                        brick_wood2.sprite.setSize(20, 80);
+                        brick_wood2.body = createBody3(brick_wood2, BodyDef.BodyType.DynamicBody);
+                        woodenBlocks.add(brick_wood2);
+                    }
+                }
+                else if(iter==2){
+                    if (blck.x == -1 && blck.y == -1) {
+                        brick_glass1 = new GlassBlock();
+                        brick_glass1.sprite=null;
+                        bodiesToDestroy.add(brick_glass1.body);
+                        glassBlocks.add(brick_glass1);
+                    }
+                    else{
+                        brick_glass1 = new GlassBlock();
+                        brick_glass1.sprite.setPosition(blck.x, blck.y);
+                        brick_glass1.sprite.setSize(20, 80);
+                        brick_glass1.body = createBody3(brick_glass1, BodyDef.BodyType.DynamicBody);
+
+                        glassBlocks.add(brick_glass1);
+                    }
+
+                }
+                iter++;
+            }
+        }
+        else {
+            pig_smallpig = new smallpig();
+            pig_smallpig.sprite.setPosition(860, 108);
+            pig_smallpig.sprite.setSize(65, 68);
+            pig_smallpig.body = createBody2(pig_smallpig, BodyDef.BodyType.DynamicBody);
+
+            pigs.add(pig_smallpig);
 
 
+            // Initialize blocks
+            brick_wood1 = new woodenBrick();
+            brick_wood1.sprite.setPosition(800, 108);
+            brick_wood1.sprite.setSize(20, 80);
+            brick_wood1.body = createBody3(brick_wood1, BodyDef.BodyType.DynamicBody);
 
-        // Initialize blocks
-        brick_wood1 = new woodenBrick();
-        brick_wood1.sprite.setPosition(800, 108);
-        brick_wood1.sprite.setSize(20, 80);
-        brick_wood1.body = createBody3(brick_wood1, BodyDef.BodyType.DynamicBody);
+            woodenBlocks.add(brick_wood1);
 
-        brick_wood2 = new woodenBrick();
-        brick_wood2.sprite.setPosition(1000, 108);
-        brick_wood2.sprite.setSize(20, 80);
-        brick_wood2.body = createBody3(brick_wood2, BodyDef.BodyType.DynamicBody);
+            brick_wood2 = new woodenBrick();
+            brick_wood2.sprite.setPosition(1000, 108);
+            brick_wood2.sprite.setSize(20, 80);
+            brick_wood2.body = createBody3(brick_wood2, BodyDef.BodyType.DynamicBody);
 
-        brick_glass1 = new GlassBlock();
-        brick_glass1.sprite.setPosition(780, 180);
-        brick_glass1.sprite.setSize(260, 30);
-        brick_glass1.body = createBody3(brick_glass1, BodyDef.BodyType.DynamicBody);
+            woodenBlocks.add(brick_wood2);
+
+
+            brick_glass1 = new GlassBlock();
+            brick_glass1.sprite.setPosition(780, 180);
+            brick_glass1.sprite.setSize(260, 30);
+            brick_glass1.body = createBody3(brick_glass1, BodyDef.BodyType.DynamicBody);
+
+            glassBlocks.add(brick_glass1);
+
+        }
+
     }
 
     private void initializeBird() {
@@ -447,7 +570,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
         Vector2 v=bird_black.calculateLaunchVelocity(catapultX,catapultY,catapultX/2,catapultY/2);
 
         Vector2 launchVelocity = new Vector2(deltaX * power, deltaY * power);// Adjust power to control launch strength
-        System.out.println("Launch Velocity Calculation: " + launchVelocity.x + ", " + launchVelocity.y);
+        //System.out.println("Launch Velocity Calculation: " + launchVelocity.x + ", " + launchVelocity.y);
         return new Vector2((deltaX - 0.5f) * power, (deltaY + 0.5f) * power);
     }
 
@@ -491,6 +614,19 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
+//                    FileOutputStream fileOut = null;
+//                    ObjectOutputStream out = null;
+//                    try {
+//                        GameState gameState = new GameState();
+//
+//                        fileOut = new FileOutputStream("gameSave.dat");
+//                        out = new ObjectOutputStream(fileOut);
+//                        out.writeObject(gameState);
+//                        out.flush();
+//                        System.out.println("Game state has been serialized and saved.");
+//                    } catch (IOException e) {
+//                        System.err.println("Error cleaning the file: " + e.getMessage());
+//                    }
                     game.setScreen(new VictoryScreen(game)); // Change to your desired screen
                 }
             }, 1);  // 2-second delay
@@ -500,6 +636,18 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
+//                    FileOutputStream fileOut = null;
+//                    ObjectOutputStream out = null;
+//                    try {
+//                        GameState gameState = new GameState();
+//                        fileOut = new FileOutputStream("gameSave.dat");
+//                        out = new ObjectOutputStream(fileOut);
+//                        out.writeObject(gameState);
+//                        out.flush();
+//                        System.out.println("Game state has been serialized and saved.");
+//                    } catch (IOException e) {
+//                        System.err.println("Error cleaning the file: " + e.getMessage());
+//                    }
                     game.setScreen(new LoseScreen(game,1)); // Change to your desired screen
                 }
             }, 1);  // 2-second delay
@@ -524,17 +672,38 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
 
         update_block(brick_glass1);
         // Draw pigs and blocks
-        if(pig_smallpig.sprite!=null){
-            pig_smallpig.sprite.draw(batch);
+        for (Pigs pig : pigs) {
+            if (pig != null && pig.body != null && pig.sprite != null) { // Check for null
+                pig.sprite.draw(batch);
+            }
         }
-        if(brick_wood1.sprite!=null){
-            brick_wood1.sprite.draw(batch);
+
+        // Draw wooden blocks
+        for (woodenBrick wood : woodenBlocks) {
+            if (wood != null && wood.body != null && wood.sprite != null) { // Check for null
+                wood.sprite.draw(batch);
+            }
         }
-        if(brick_wood2.sprite!=null){
-            brick_wood2.sprite.draw(batch);
+
+        // Draw glass blocks
+        for (GlassBlock glass : glassBlocks) {
+            if (glass != null && glass.body != null && glass.sprite != null) { // Check for null
+                glass.sprite.draw(batch);
+            }
         }
-        if(brick_glass1.sprite!=null){
-            brick_glass1.sprite.draw(batch);
+
+        // Draw steel blocks
+        for (SteelBlock steel : steelBlocks) {
+            if (steel != null && steel.body != null && steel.sprite != null) { // Check for null
+                steel.sprite.draw(batch);
+            }
+        }
+
+        // Draw active birds
+        for (AngryBird bird : birds) {
+            if (bird != null && bird.body != null && bird.sprite != null) { // Check for null
+                bird.sprite.draw(batch);
+            }
         }
 
 
@@ -554,7 +723,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
 
         stage.act(delta);
         stage.draw();
-    }
+}
 
     @Override
     public void resize(int width, int height) {
@@ -565,6 +734,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
     @Override
     public void hide() {
         // Optional: Implement any cleanup logic for when the screen is hidden
+        gameHandler.saveGameState(pigs, woodenBlocks, glassBlocks);
     }
     @Override
     public void dispose() {
@@ -579,11 +749,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
         bird_cnt--;
         if (cntr > 0) {
             cntr--; // Decrement counter for the next bird
-            if (cntr == 1) {
-                bird_black = new RedAngryBird();
-            } else if (cntr == 0) {
-                bird_black = new BlueAngryBird();
-            }
+            bird_black = BirdFactory2.createBird(cntr); // Create the next bird using factory method
             bird_black.sprite.setSize(42, 51);
             bird_black.sprite.setPosition(250, 108); // Reset position above the catapult
             bird_black.body = createBody(bird_black, BodyDef.BodyType.DynamicBody); // Create the new body

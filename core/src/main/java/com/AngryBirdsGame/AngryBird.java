@@ -47,6 +47,7 @@ class AngryBird {
     public Sprite getSprite(){
         return sprite;
     }
+
     public Body getBody(){
         return body;
     }
