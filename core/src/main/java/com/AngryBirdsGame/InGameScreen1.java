@@ -21,41 +21,41 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InGameScreen extends ApplicationAdapter implements Screen {
+public class InGameScreen1 extends ApplicationAdapter implements Screen {
     private Main game;
-    private final List<Body> bodiesToDestroy = new ArrayList<Body>();
     int black_bird_flight = 0;
     boolean isDragging = false; // Track if bird is being dragged
     private Stage stage;
     private World world;
-    private int cntr = 2;
+    int cntr = 2;
     private SpriteBatch batch;
     private Sprite background;
     private Body groundBody; // Box2D body for ground
     private AngryBird bird_black;
-    private ImageButton pause;
-    int pig_cntr=3;
-    int bird_cnt=3;
-
-    private final float PPM = 100f;
-    private ShapeRenderer shapeRenderer; // For trajectory
-    private Sprite groundSprite;// Pixels per meter scaling
-    private Vector2 dragStartPosition = new Vector2();// Store the starting point of the drag
     private catapol cata;
-    ArrayList<  SteelBlock> arr=new ArrayList<SteelBlock>();
-    private SteelBlock squareGlasses1, squareGlasses2, squareGlasses3, squareGlasses4, squareGlasses5, squareGlasses6,squareGlasses7,squareGlasses8,squareGlasses9,squareGlasses10,squareGlasses11,squareGlasses12;
+    private final List<Body> bodiesToDestroy = new ArrayList<Body>();
+    private ImageButton pause;
+    private woodenBrick brick_wood1, brick_wood2, brick_wood3, brick_wood4;
+    private GlassBlock brick_glass1, brick_glass2;
+    private SteelBlock brick_steel;
+    int bird_cnt=3;
+    int pig_cntr=1;
     private smallpig pig_smallpig;
     private kingpig pig_king;
     private fattyPig pig_fatty;
+    private final float PPM = 100f;
+    private ShapeRenderer shapeRenderer; // For trajectory
+    private Sprite groundSprite;// Pixels per meter scaling
+    private Vector2 dragStartPosition = new Vector2(); // Store the starting point of the drag
 
-    public InGameScreen(Main main) {
+    public InGameScreen1(Main main) {
         this.game = main;
         this.batch = new SpriteBatch();
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         Gdx.input.setInputProcessor(stage);
 
+
         this.world = new World(new Vector2(0f, -9.8f), true);
-        initializeContactListener();
         background = new Sprite(new Texture("GamePage.jpg"));
         background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -70,6 +70,8 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         shapeRenderer = new ShapeRenderer();
 
 
+        initializeContactListener();
+
         // Initialize the pause button
         pause = new ImageButton(new SpriteDrawable(new Sprite(new Texture("pause.png"))));
         pause.setSize(50, 60);
@@ -78,7 +80,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         pause.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new PauseMenuScreen(game,3));
+                game.setScreen(new PauseMenuScreen(game,1));
             }
         });
 
@@ -118,14 +120,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
                 }
             }
         });
-        for(int i=0;i<6;i++){
-            if(arr.get(i)==null){
-                System.out.println("null");
-            }
-            if(arr.get(i)!=null){
-                update_block(arr.get(i));
-            }
-        }
+//
     }
 
     private void initializeContactListener() {
@@ -168,17 +163,17 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
                 }
 
                 // Check if the contact is between a bird and a pig
-                if ((bodyA.getUserData() instanceof Blocks && bodyB.getUserData() instanceof Blocks)
-                   ) {
-                    System.out.println("Brick hit a brick!");
-                    // Handle bird and pig collision
-                    handleBrickBrickCollision(bodyA, bodyB);
-                }
+//                if ((bodyA.getUserData() instanceof Blocks && bodyB.getUserData() instanceof Blocks)
+//                ) {
+//                    System.out.println("Bird hit a pig!");
+//                    // Handle bird and pig collision
+//                    handleBrickBrickCollision(bodyA, bodyB);
+//                }
 
-//                // Check if the contact is between a bird and a pig
+                // Check if the contact is between a bird and a pig
 //                if ((bodyA.getUserData() instanceof Blocks && bodyB.getUserData() instanceof Pigs) ||
 //                    (bodyA.getUserData() instanceof Pigs && bodyB.getUserData() instanceof Blocks)) {
-//                    System.out.println("Bricks hit a pig!");
+//                    System.out.println("Bird hit a pig!");
 //                    // Handle bird and pig collision
 //                    handleBrickPigCollision(bodyA, bodyB);
 //                }
@@ -257,7 +252,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
             System.out.println("Collision not identified properly: Bird: " + (brick2 != null) + " Brick: " + (brick1 != null));
         }
 
-         brick2.takeDamage(1);
+        brick2.takeDamage(1);
         brick1.takeDamage(1);
         if(brick1.isDestroyed()){
             bodiesToDestroy.add(brick1.body);
@@ -296,7 +291,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         }
 
 
-         pigs.takeDamage(1);
+        pigs.takeDamage(1);
         if(pigs.isDead()){
             bodiesToDestroy.add(pigs.body);
             pigs.sprite=null;
@@ -352,81 +347,29 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
     private void initializeObstacles() {
         // Initialize pigs
         pig_smallpig = new smallpig();
-        pig_smallpig.sprite.setPosition(790, 280); // Adjusted position
-        pig_smallpig.sprite.setSize(45, 50);
+        pig_smallpig.sprite.setPosition(860, 108);
+        pig_smallpig.sprite.setSize(65, 68);
         pig_smallpig.body = createBody2(pig_smallpig, BodyDef.BodyType.DynamicBody);
-        pig_smallpig.body.setAwake(false);
 
-        pig_king = new kingpig();
-        pig_king.sprite.setPosition(860, 100); // Above small pig
-        pig_king.sprite.setSize(45, 50);
-        pig_king.body = createBody2(pig_king, BodyDef.BodyType.DynamicBody);
-        pig_king.body.setAwake(false);
 
-        pig_fatty = new fattyPig();
-        pig_fatty.sprite.setPosition(950, 280); // Above king pig
-        pig_fatty.sprite.setSize(45, 50);
-        pig_fatty.body = createBody2(pig_fatty, BodyDef.BodyType.DynamicBody);
-        pig_fatty.body.setAwake(false);
 
-        squareGlasses1=new SteelBlock();
-        squareGlasses2=new SteelBlock();
-        squareGlasses3=new SteelBlock();
-        squareGlasses4=new SteelBlock();
-        squareGlasses5=new SteelBlock();
-        squareGlasses6=new SteelBlock();
-        squareGlasses7=new SteelBlock();
-        squareGlasses8=new SteelBlock();
-        squareGlasses9=new SteelBlock();
-        squareGlasses10=new SteelBlock();
-        squareGlasses11=new SteelBlock();
-        squareGlasses12=new SteelBlock();
-        arr.add(squareGlasses1);
-        arr.add(squareGlasses2);
-        arr.add(squareGlasses3);
-        arr.add(squareGlasses4);
-        arr.add(squareGlasses5);
-        arr.add(squareGlasses6);
-        arr.add(squareGlasses7);
-        arr.add(squareGlasses8);
-        arr.add(squareGlasses9);
-        arr.add(squareGlasses10);
-        arr.add(squareGlasses11);
-        arr.add(squareGlasses12);
+        // Initialize blocks
+        brick_wood1 = new woodenBrick();
+        brick_wood1.sprite.setPosition(800, 108);
+        brick_wood1.sprite.setSize(20, 80);
+        brick_wood1.body = createBody3(brick_wood1, BodyDef.BodyType.DynamicBody);
 
-        for(int i=0;i<3;i++){
-            SteelBlock x =arr.get(i);
+        brick_wood2 = new woodenBrick();
+        brick_wood2.sprite.setPosition(1000, 108);
+        brick_wood2.sprite.setSize(20, 80);
+        brick_wood2.body = createBody3(brick_wood2, BodyDef.BodyType.DynamicBody);
 
-            x.sprite.setPosition(850-50-30-10,100+50*i);
-            x.sprite.setSize(50,50);
-            x.body=createBody3(x, BodyDef.BodyType.DynamicBody);
-            x.body.setAwake(false);
-
-        }
-
-        for(int i=3;i<6;i++){
-            SteelBlock x=arr.get(i);
-            x.sprite.setPosition(860-30,100+50*(i-3));
-            x.sprite.setSize(50,50);
-            x.body=createBody3(x, BodyDef.BodyType.DynamicBody);
-            x.body.setAwake(false);
-        }
-        for(int i=6;i<9;i++){
-            SteelBlock x=arr.get(i);
-            x.sprite.setPosition(940,100+50*(i-6));
-            x.sprite.setSize(50,50);
-            x.body=createBody3(x, BodyDef.BodyType.DynamicBody);
-            x.body.setAwake(false);
-        }
-        for(int i=9;i<12;i++){
-            SteelBlock x=arr.get(i);
-            x.sprite.setPosition(1000,100+50*(i-9));
-            x.sprite.setSize(50,50);
-            x.body=createBody3(x, BodyDef.BodyType.DynamicBody);
-            x.body.setAwake(false);
-        }
-
+        brick_glass1 = new GlassBlock();
+        brick_glass1.sprite.setPosition(780, 180);
+        brick_glass1.sprite.setSize(260, 30);
+        brick_glass1.body = createBody3(brick_glass1, BodyDef.BodyType.DynamicBody);
     }
+
     private void initializeBird() {
         bird_black = new BlackAngryBird();
         bird_black.sprite.setSize(42, 51);
@@ -499,12 +442,16 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
 
         float deltaX = (catapultX - x) / PPM;
         float deltaY = (catapultY - y) / PPM;
-        float power = 30f;
+        float power = 15f;
+
+        Vector2 v=bird_black.calculateLaunchVelocity(catapultX,catapultY,catapultX/2,catapultY/2);
 
         Vector2 launchVelocity = new Vector2(deltaX * power, deltaY * power);// Adjust power to control launch strength
         System.out.println("Launch Velocity Calculation: " + launchVelocity.x + ", " + launchVelocity.y);
         return new Vector2((deltaX - 0.5f) * power, (deltaY + 0.5f) * power);
     }
+
+
 
     @Override
     public void show() {
@@ -528,20 +475,18 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         if(blc!=null && blc.sprite!=null){
             Vector2 bodyPosition = blc.body.getPosition();
             blc.sprite.setPosition(
-                (bodyPosition.x * PPM - blc.sprite.getWidth() / 2) ,
-                (bodyPosition.y * PPM - blc.sprite.getHeight() / 2)
+                bodyPosition.x * PPM - blc.sprite.getWidth() / 2,
+                bodyPosition.y * PPM - blc.sprite.getHeight() / 2
             );
-//            System.out.println(blc.sprite.getX()+"blocksSprite"+blc.sprite.getY());
-//            System.out.println(blc.body.getPosition()+"Body wlag");
-
         }
     }
 
     @Override
     public void render(float delta) {
-
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         world.step(1 / 60f, 6, 2); // Step the physics simulation
+        processPendingDestructions();
+        // Update the bird's sprite position based on the physics body's position
         if(bird_cnt>0 && pig_cntr<=0){
             Timer.schedule(new Timer.Task() {
                 @Override
@@ -555,11 +500,11 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    game.setScreen(new LoseScreen(game,3)); // Change to your desired screen
+                    game.setScreen(new LoseScreen(game,1)); // Change to your desired screen
                 }
             }, 1);  // 2-second delay
         }
-        processPendingDestructions();
+        // Render the scene
         batch.begin();
         background.draw(batch);
         groundSprite.draw(batch);
@@ -573,34 +518,29 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
             bird_black.sprite.draw(batch);
         }
         update_pos(pig_smallpig);
-        update_pos(pig_king);
-        update_pos(pig_fatty);
-        for(int i=0;i<12;i++){
-            SteelBlock x=arr.get(i);
-            update_block(x);
-        }
-        if(pig_king.sprite!=null){
-            pig_king.sprite.draw(batch);
-        }
+
+        update_block(brick_wood1);
+        update_block(brick_wood2);
+
+        update_block(brick_glass1);
+        // Draw pigs and blocks
         if(pig_smallpig.sprite!=null){
             pig_smallpig.sprite.draw(batch);
         }
-        if(pig_fatty.sprite!=null){
-            pig_fatty.sprite.draw(batch);
+        if(brick_wood1.sprite!=null){
+            brick_wood1.sprite.draw(batch);
         }
-        for(int i=0;i<12;i++) {
-            SteelBlock y = arr.get(i);
-            if (y == null) {
-                System.out.println("null" + i);
-            }
-            if (y != null && y.sprite != null) {
-                y.sprite.draw(batch);
-            }
+        if(brick_wood2.sprite!=null){
+            brick_wood2.sprite.draw(batch);
         }
+        if(brick_glass1.sprite!=null){
+            brick_glass1.sprite.draw(batch);
+        }
+
+
         cata.sprite.draw(batch);
         batch.end();
         updateBirdPosition();
-
 
         // Draw trajectory if dragging
         if (isDragging && bird_black.sprite != null) {
@@ -639,10 +579,6 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         bird_cnt--;
         if (cntr > 0) {
             cntr--; // Decrement counter for the next bird
-            if (bird_black.body != null) {
-                bodiesToDestroy.add(bird_black.body); // Destroy the previous bird’s body
-            }
-
             if (cntr == 1) {
                 bird_black = new RedAngryBird();
             } else if (cntr == 0) {
@@ -664,25 +600,19 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
             (gameObject.sprite.getY() + gameObject.sprite.getHeight() / 2) / PPM
         );
 
-
         Body body = world.createBody(bodyDef);
-        System.out.println(body.getPosition()+"HI-?blocks body");
-        System.out.println(gameObject.sprite.getX()+" "+gameObject.sprite.getY());
-        PolygonShape shape = new PolygonShape();
-        Pigs block = (Pigs) gameObject;
-        float halfWidth = (block.sprite.getWidth() / 2) / PPM; // Convert to meters
-        float halfHeight = (block.sprite.getHeight() / 2) / PPM; // Convert to meters
-        shape.setAsBox(halfWidth, halfHeight);
+        CircleShape shape = new CircleShape();
 
-
-
-//        shape.setAsBox(1.4f,0.8f);
+        // Using the size of the pig sprite to create the shape correctly
+        float halfWidth = (gameObject.sprite.getWidth() / 2) / PPM;
+        float halfHeight = (gameObject.sprite.getHeight() / 2) / PPM;
+        shape.setRadius(0.3f);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 0.3f;
+        fixtureDef.density = 0.4f;
         fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.2f;
+        fixtureDef.restitution = 0.5f;
 
         body.createFixture(fixtureDef);
         body.setUserData(gameObject);
@@ -706,8 +636,6 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         float halfHeight = (block.sprite.getHeight() / 2) / PPM; // Convert to meters
         shape.setAsBox(halfWidth, halfHeight);
 
-        System.out.println(halfWidth+"angryWala "+halfHeight);
-
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;
@@ -728,28 +656,21 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
             (gameObject.sprite.getY() + gameObject.sprite.getHeight() / 2) / PPM
         );
 
-
         Body body = world.createBody(bodyDef);
-        System.out.println(body.getPosition()+"HI-?blocks body");
-        System.out.println(gameObject.sprite.getX()+" "+gameObject.sprite.getY());
         PolygonShape shape = new PolygonShape();
-        Blocks block = (Blocks) gameObject;
-        float halfWidth = (block.sprite.getWidth() / 2) / PPM; // Convert to meters
-        float halfHeight = (block.sprite.getHeight() / 2) / PPM; // Convert to meters
-        shape.setAsBox(halfWidth, halfHeight);
 
-
-
-//        shape.setAsBox(1.4f,0.8f);
+        shape.setAsBox(0.5f,0.25f);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 0.3f;
         fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.2f;
+        fixtureDef.restitution = 0.25f;
 
         body.createFixture(fixtureDef);
         body.setUserData(gameObject);
+
+        System.out.println(body.getUserData()+"yeh kyun");
         shape.dispose();
         return body;
     }

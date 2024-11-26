@@ -21,7 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InGameScreen extends ApplicationAdapter implements Screen {
+public class InGameScreen2 extends ApplicationAdapter implements Screen {
     private Main game;
     private final List<Body> bodiesToDestroy = new ArrayList<Body>();
     int black_bird_flight = 0;
@@ -34,21 +34,21 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
     private Body groundBody; // Box2D body for ground
     private AngryBird bird_black;
     private ImageButton pause;
-    int pig_cntr=3;
-    int bird_cnt=3;
 
     private final float PPM = 100f;
     private ShapeRenderer shapeRenderer; // For trajectory
     private Sprite groundSprite;// Pixels per meter scaling
     private Vector2 dragStartPosition = new Vector2();// Store the starting point of the drag
     private catapol cata;
-    ArrayList<  SteelBlock> arr=new ArrayList<SteelBlock>();
-    private SteelBlock squareGlasses1, squareGlasses2, squareGlasses3, squareGlasses4, squareGlasses5, squareGlasses6,squareGlasses7,squareGlasses8,squareGlasses9,squareGlasses10,squareGlasses11,squareGlasses12;
+    int pig_cntr=2;
+    int bird_cnt=3;
+    ArrayList<SquareGlasses> arr=new ArrayList<SquareGlasses>();
+    private SquareGlasses squareGlasses1, squareGlasses2, squareGlasses3, squareGlasses4, squareGlasses5, squareGlasses6;
     private smallpig pig_smallpig;
     private kingpig pig_king;
     private fattyPig pig_fatty;
 
-    public InGameScreen(Main main) {
+    public InGameScreen2(Main main) {
         this.game = main;
         this.batch = new SpriteBatch();
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
@@ -78,7 +78,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         pause.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new PauseMenuScreen(game,3));
+                game.setScreen(new PauseMenuScreen(game,2));
             }
         });
 
@@ -169,16 +169,16 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
 
                 // Check if the contact is between a bird and a pig
                 if ((bodyA.getUserData() instanceof Blocks && bodyB.getUserData() instanceof Blocks)
-                   ) {
-                    System.out.println("Brick hit a brick!");
+                ) {
+                    System.out.println("Bird hit a pig!");
                     // Handle bird and pig collision
                     handleBrickBrickCollision(bodyA, bodyB);
                 }
 
-//                // Check if the contact is between a bird and a pig
+                // Check if the contact is between a bird and a pig
 //                if ((bodyA.getUserData() instanceof Blocks && bodyB.getUserData() instanceof Pigs) ||
 //                    (bodyA.getUserData() instanceof Pigs && bodyB.getUserData() instanceof Blocks)) {
-//                    System.out.println("Bricks hit a pig!");
+//                    System.out.println("Bird hit a pig!");
 //                    // Handle bird and pig collision
 //                    handleBrickPigCollision(bodyA, bodyB);
 //                }
@@ -257,7 +257,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
             System.out.println("Collision not identified properly: Bird: " + (brick2 != null) + " Brick: " + (brick1 != null));
         }
 
-         brick2.takeDamage(1);
+        brick2.takeDamage(1);
         brick1.takeDamage(1);
         if(brick1.isDestroyed()){
             bodiesToDestroy.add(brick1.body);
@@ -296,7 +296,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         }
 
 
-         pigs.takeDamage(1);
+        pigs.takeDamage(1);
         if(pigs.isDead()){
             bodiesToDestroy.add(pigs.body);
             pigs.sprite=null;
@@ -352,52 +352,40 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
     private void initializeObstacles() {
         // Initialize pigs
         pig_smallpig = new smallpig();
-        pig_smallpig.sprite.setPosition(790, 280); // Adjusted position
+        pig_smallpig.sprite.setPosition(850, 100); // Adjusted position
         pig_smallpig.sprite.setSize(45, 50);
         pig_smallpig.body = createBody2(pig_smallpig, BodyDef.BodyType.DynamicBody);
         pig_smallpig.body.setAwake(false);
 
         pig_king = new kingpig();
-        pig_king.sprite.setPosition(860, 100); // Above small pig
+        pig_king.sprite.setPosition(900, 200); // Above small pig
         pig_king.sprite.setSize(45, 50);
         pig_king.body = createBody2(pig_king, BodyDef.BodyType.DynamicBody);
         pig_king.body.setAwake(false);
 
-        pig_fatty = new fattyPig();
-        pig_fatty.sprite.setPosition(950, 280); // Above king pig
-        pig_fatty.sprite.setSize(45, 50);
-        pig_fatty.body = createBody2(pig_fatty, BodyDef.BodyType.DynamicBody);
-        pig_fatty.body.setAwake(false);
+//        pig_fatty = new fattyPig();
+//        pig_fatty.sprite.setPosition(880, 300); // Above king pig
+//        pig_fatty.sprite.setSize(45, 50);
+//        pig_fatty.body = createBody2(pig_fatty, BodyDef.BodyType.DynamicBody);
+//        pig_fatty.body.setAwake(false);
 
-        squareGlasses1=new SteelBlock();
-        squareGlasses2=new SteelBlock();
-        squareGlasses3=new SteelBlock();
-        squareGlasses4=new SteelBlock();
-        squareGlasses5=new SteelBlock();
-        squareGlasses6=new SteelBlock();
-        squareGlasses7=new SteelBlock();
-        squareGlasses8=new SteelBlock();
-        squareGlasses9=new SteelBlock();
-        squareGlasses10=new SteelBlock();
-        squareGlasses11=new SteelBlock();
-        squareGlasses12=new SteelBlock();
+        squareGlasses1=new SquareGlasses();
+        squareGlasses2=new SquareGlasses();
+        squareGlasses3=new SquareGlasses();
+        squareGlasses4=new SquareGlasses();
+        squareGlasses5=new SquareGlasses();
+        squareGlasses6=new SquareGlasses();
         arr.add(squareGlasses1);
         arr.add(squareGlasses2);
         arr.add(squareGlasses3);
         arr.add(squareGlasses4);
         arr.add(squareGlasses5);
         arr.add(squareGlasses6);
-        arr.add(squareGlasses7);
-        arr.add(squareGlasses8);
-        arr.add(squareGlasses9);
-        arr.add(squareGlasses10);
-        arr.add(squareGlasses11);
-        arr.add(squareGlasses12);
 
         for(int i=0;i<3;i++){
-            SteelBlock x =arr.get(i);
+            SquareGlasses x =arr.get(i);
 
-            x.sprite.setPosition(850-50-30-10,100+50*i);
+            x.sprite.setPosition(850-50,100+50*i);
             x.sprite.setSize(50,50);
             x.body=createBody3(x, BodyDef.BodyType.DynamicBody);
             x.body.setAwake(false);
@@ -405,27 +393,12 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         }
 
         for(int i=3;i<6;i++){
-            SteelBlock x=arr.get(i);
-            x.sprite.setPosition(860-30,100+50*(i-3));
+            SquareGlasses x=arr.get(i);
+            x.sprite.setPosition(950,100+50*(i-3));
             x.sprite.setSize(50,50);
             x.body=createBody3(x, BodyDef.BodyType.DynamicBody);
             x.body.setAwake(false);
         }
-        for(int i=6;i<9;i++){
-            SteelBlock x=arr.get(i);
-            x.sprite.setPosition(940,100+50*(i-6));
-            x.sprite.setSize(50,50);
-            x.body=createBody3(x, BodyDef.BodyType.DynamicBody);
-            x.body.setAwake(false);
-        }
-        for(int i=9;i<12;i++){
-            SteelBlock x=arr.get(i);
-            x.sprite.setPosition(1000,100+50*(i-9));
-            x.sprite.setSize(50,50);
-            x.body=createBody3(x, BodyDef.BodyType.DynamicBody);
-            x.body.setAwake(false);
-        }
-
     }
     private void initializeBird() {
         bird_black = new BlackAngryBird();
@@ -502,7 +475,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         float power = 30f;
 
         Vector2 launchVelocity = new Vector2(deltaX * power, deltaY * power);// Adjust power to control launch strength
-        System.out.println("Launch Velocity Calculation: " + launchVelocity.x + ", " + launchVelocity.y);
+        //System.out.println("Launch Velocity Calculation: " + launchVelocity.x + ", " + launchVelocity.y);
         return new Vector2((deltaX - 0.5f) * power, (deltaY + 0.5f) * power);
     }
 
@@ -531,17 +504,16 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
                 (bodyPosition.x * PPM - blc.sprite.getWidth() / 2) ,
                 (bodyPosition.y * PPM - blc.sprite.getHeight() / 2)
             );
-//            System.out.println(blc.sprite.getX()+"blocksSprite"+blc.sprite.getY());
-//            System.out.println(blc.body.getPosition()+"Body wlag");
+
 
         }
     }
 
     @Override
     public void render(float delta) {
-
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        world.step(1 / 60f, 6, 2); // Step the physics simulation
+        world.step(1 / 60f, 6, 2); // Step the physics
+        System.out.println("pig_cntr"+pig_cntr+"bird_cnr"+bird_cnt);
         if(bird_cnt>0 && pig_cntr<=0){
             Timer.schedule(new Timer.Task() {
                 @Override
@@ -555,7 +527,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    game.setScreen(new LoseScreen(game,3)); // Change to your desired screen
+                    game.setScreen(new LoseScreen(game,2)); // Change to your desired screen
                 }
             }, 1);  // 2-second delay
         }
@@ -574,9 +546,8 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         }
         update_pos(pig_smallpig);
         update_pos(pig_king);
-        update_pos(pig_fatty);
-        for(int i=0;i<12;i++){
-            SteelBlock x=arr.get(i);
+        for(int i=0;i<6;i++){
+            SquareGlasses x=arr.get(i);
             update_block(x);
         }
         if(pig_king.sprite!=null){
@@ -585,11 +556,8 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         if(pig_smallpig.sprite!=null){
             pig_smallpig.sprite.draw(batch);
         }
-        if(pig_fatty.sprite!=null){
-            pig_fatty.sprite.draw(batch);
-        }
-        for(int i=0;i<12;i++) {
-            SteelBlock y = arr.get(i);
+        for(int i=0;i<6;i++) {
+            SquareGlasses y = arr.get(i);
             if (y == null) {
                 System.out.println("null" + i);
             }
