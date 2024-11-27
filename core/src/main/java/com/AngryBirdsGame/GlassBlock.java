@@ -10,6 +10,6 @@ public class GlassBlock extends Blocks {
     public GlassBlock() {
         super("Glassy",0,0,2);
         this.sprite=new Sprite(new Texture("glassStraightBrick.png"));
-        this.durability=2;
+        this.durability=1;
     }
 }

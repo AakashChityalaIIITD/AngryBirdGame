@@ -638,7 +638,7 @@ public class InGameScreen2 extends ApplicationAdapter implements Screen {
         // Physics parameters
         float g = world.getGravity().y; // Gravity in world units (negative)
         float step = 0.05f;
-        int maxSteps = 20;
+        int maxSteps = 12;
         float worldBirdX = birdX / PPM;
         float worldBirdY = birdY / PPM;
 
@@ -749,7 +749,7 @@ public class InGameScreen2 extends ApplicationAdapter implements Screen {
                     }
                     game.setScreen(new LoseScreen(game,2)); // Change to your desired screen
                 }
-            }, 0.5f);  // 2-second delay
+            }, 0.8f);  // 2-second delay
         }
 
         processPendingDestructions();

@@ -378,7 +378,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
 
         FixtureDef groundFixtureDef = new FixtureDef();
         groundFixtureDef.shape = groundShape;
-        groundFixtureDef.friction = 0.5f;
+        groundFixtureDef.friction = 0.8f;
 
         groundBody.createFixture(groundFixtureDef);
         groundShape.dispose();
@@ -544,7 +544,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
         // Physics parameters
         float g = world.getGravity().y; // Gravity in world units (negative)
         float step = 0.05f;
-        int maxSteps = 20;
+        int maxSteps = 12;
         float worldBirdX = birdX / PPM;
         float worldBirdY = birdY / PPM;
 
@@ -581,7 +581,6 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
         Vector2 v=bird_black.calculateLaunchVelocity(catapultX,catapultY,catapultX/2,catapultY/2);
 
         Vector2 launchVelocity = new Vector2(deltaX * power, deltaY * power);// Adjust power to control launch strength
-        //System.out.println("Launch Velocity Calculation: " + launchVelocity.x + ", " + launchVelocity.y);
         return new Vector2((deltaX - 0.5f) * power, (deltaY + 0.5f) * power);
     }
 
@@ -631,6 +630,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
+
                     FileOutputStream fileOut = null;
                     ObjectOutputStream out = null;
                     try {
@@ -658,7 +658,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
                     }
                     game.setScreen(new LoseScreen(game,1)); // Change to your desired screen
                 }
-            }, 0.5f);  // 2-second delay
+            }, 0.8f);  // 2-second delay
         }
 
         // Render the scene
@@ -786,7 +786,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 0.4f;
-        fixtureDef.friction = 0.4f;
+        fixtureDef.friction = 0.9f;
         fixtureDef.restitution = 0.5f;
 
         body.createFixture(fixtureDef);
