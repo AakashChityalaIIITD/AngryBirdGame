@@ -673,12 +673,6 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         pig_smallpig.body.setAwake(false);
         pigs.add(pig_smallpig);
 
-        pig_king = new kingpig();
-        pig_king.sprite.setPosition(860, 100); // Above small pig
-        pig_king.sprite.setSize(45, 50);
-        pig_king.body = createBody2(pig_king, BodyDef.BodyType.DynamicBody);
-        pig_king.body.setAwake(false);
-        pigs.add(pig_king);
 
         pig_fatty = new fattyPig();
         pig_fatty.sprite.setPosition(950, 280); // Above king pig
@@ -686,6 +680,13 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         pig_fatty.body = createBody2(pig_fatty, BodyDef.BodyType.DynamicBody);
         pig_fatty.body.setAwake(false);
         pigs.add(pig_fatty);
+
+            pig_king = new kingpig();
+            pig_king.sprite.setPosition(860, 100); // Above small pig
+            pig_king.sprite.setSize(45, 50);
+            pig_king.body = createBody2(pig_king, BodyDef.BodyType.DynamicBody);
+            pig_king.body.setAwake(false);
+            pigs.add(pig_king);
 
         squareGlasses1=new SteelBlock();
         squareGlasses2=new SteelBlock();
@@ -977,6 +978,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
     private void swamp() {
         if (bird_cnt > 0) {
             bird_cnt--;
+            bodiesToDestroy.add(bird_black.body);
             bird_black = BirdFactory3.createBird(bird_cnt); // Create the next bird using factory method
             bird_black.sprite.setSize(42, 51);
             bird_black.sprite.setPosition(250, 108); // Reset position above the catapult
@@ -1082,5 +1084,9 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         body.setUserData(gameObject);
         shape.dispose();
         return body;
+    }
+
+    public Stage getStage(){
+        return this.stage;
     }
 }

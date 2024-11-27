@@ -756,6 +756,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
     // Method to switch to the next bird after one is launched
     private void swamp() {
         if (bird_cnt > 0) {
+            bodiesToDestroy.add(bird_black.body);
             bird_cnt--; // Decrement counter for the next bird
             bird_black = BirdFactory2.createBird(bird_cnt); // Create the next bird using factory method
             bird_black.sprite.setSize(42, 51);
@@ -846,5 +847,8 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
 
         shape.dispose();
         return body;
+    }
+    public Stage getStage(){
+        return this.stage;
     }
 }

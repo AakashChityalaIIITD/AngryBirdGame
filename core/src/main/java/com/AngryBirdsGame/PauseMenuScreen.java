@@ -40,10 +40,17 @@ public class PauseMenuScreen implements Screen {
     private boolean showMessage = false;
     private float messageDisplayTime = 2f;
     private float elapsedTime = 0;
+    private final InGameScreen ing3;
+    private final InGameScreen2 ing2;
+    private final
+    InGameScreen1 ing1;
     Table table;
     String filename;
-    public PauseMenuScreen(Main main, final int level, final List<Pigs> pigs1, final List<woodenBrick> bricks1, final List<GlassBlock> glassBlocks1, final List<SquareGlasses> squareGlasses1, final List<SteelBlock> steelBlocks1, final int noOfBirds, final InGameScreen1 ing1, final InGameScreen ing3, final InGameScreen2 ing2){
+    public PauseMenuScreen(Main main, final int level, final List<Pigs> pigs1, final List<woodenBrick> bricks1, final List<GlassBlock> glassBlocks1, final List<SquareGlasses> squareGlasses1, final List<SteelBlock> steelBlocks1, final int noOfBirds,  InGameScreen1 ing11,  InGameScreen ing31,  InGameScreen2 ing21){
         this.game=main;
+        this.ing1=ing11;
+        this.ing2=ing21;
+        this.ing3=ing31;
         this.filename = "gameSave" + level + ".dat";
         this.font = new BitmapFont();
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));  // FitViewport maintains aspect ratio
@@ -73,12 +80,16 @@ public class PauseMenuScreen implements Screen {
            public void clicked(InputEvent event, float x, float y) {
                 if(level==1){
                     game.setScreen(ing1);
+                    Gdx.input.setInputProcessor(ing1.getStage());
                 }
                 else if(level==3){
                     game.setScreen(ing3);
+                    Gdx.input.setInputProcessor(ing3.getStage());
                 }
                 else{
                     game.setScreen(ing2);
+                    Gdx.input.setInputProcessor(ing2.getStage());
+
                 }
            }
         });
