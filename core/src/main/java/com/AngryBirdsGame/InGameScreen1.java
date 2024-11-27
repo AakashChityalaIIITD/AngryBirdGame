@@ -26,9 +26,9 @@ import java.util.List;
 class BirdFactory2 {
     public static AngryBird createBird(int type) {
         switch (type) {
-            case 1: return new RedAngryBird();
-            case 2: return new BlackAngryBird();
-            case 3: return new BlueAngryBird();
+            case 2: return new RedAngryBird();
+            case 3: return new BlackAngryBird();
+            case 1: return new BlueAngryBird();
             default: return new BlueAngryBird();
         }
     }
@@ -50,9 +50,9 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
     private List<GlassBlock> glassBlocks;
     private List<SteelBlock> steelBlocks;
     private List<AngryBird> birds;
+    private List<SquareGlasses> glasses;
 
-
-
+    boolean chkNewGame;
     private SpriteBatch batch;
     private Sprite background;
     private Body groundBody; // Box2D body for ground
@@ -74,12 +74,14 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
     private Sprite groundSprite;// Pixels per meter scaling
     private Vector2 dragStartPosition = new Vector2(); // Store the starting point of the drag
 
-    public InGameScreen1(Main main) {
+    public InGameScreen1(Main main, boolean chkNewGame) {
         this.game = main;
+        this.chkNewGame = chkNewGame;
         this.batch = new SpriteBatch();
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         Gdx.input.setInputProcessor(stage);
 
+        glasses = new ArrayList<SquareGlasses>();
         pigs = new ArrayList<Pigs>();
         steelBlocks = new ArrayList<SteelBlock>();
         woodenBlocks = new ArrayList<woodenBrick>();
@@ -115,7 +117,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
         pause.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new PauseMenuScreen(game,1));
+                game.setScreen(new PauseMenuScreen(game,1, pigs,woodenBlocks,glassBlocks,glasses,steelBlocks, bird_cnt));
             }
         });
 
@@ -350,7 +352,9 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
         Pigs pig = (Pigs) (fixtureA.getUserData() instanceof Pigs ?
             fixtureA.getUserData() : fixtureB.getUserData());
 
+        System.out.println("before: " + pig.getHealth());
         pig.takeDamage(bird.getImpactPower());
+        System.out.println("after:" + pig.getHealth());
         if(pig.isDead()){
             bodiesToDestroy.add(pig.body);
             pig.sprite=null;
@@ -381,9 +385,11 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
 
     private void initializeObstacles() {
         // Initialize pigs
-        if (chk) {
+        if (chk && (!chkNewGame)) {
+            bird_cnt = gameHandler.loadNoOfBirds();
+            bird_cnt++;
+            swamp();
             List<GameState.PigState> p = gameHandler.loadPigs();
-            System.out.println(p.size());
             List<GameState.BlockState> b = gameHandler.loadBlocks();
             for (GameState.PigState pig : p) {
                 if(pig.x==-1 && pig.y==-1){
@@ -394,6 +400,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
                 }
                 else {
                     pig_smallpig = new smallpig();
+                    pig_smallpig.setHealth(pig.durability);
                     pig_smallpig.sprite.setPosition(pig.x, pig.y);
                     pig_smallpig.sprite.setSize(65, 68);
                     pig_smallpig.body = createBody2(pig_smallpig, BodyDef.BodyType.DynamicBody);
@@ -412,6 +419,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
                     }
                     else{
                         brick_wood1 = new woodenBrick();
+                        brick_wood1.setDurability(blck.durability);
                         brick_wood1.sprite.setPosition(blck.x, blck.y);
                         brick_wood1.sprite.setSize(20, 80);
                         brick_wood1.body = createBody3(brick_wood1, BodyDef.BodyType.DynamicBody);
@@ -431,6 +439,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
                     }
                     else{
                         brick_wood2 = new woodenBrick();
+                        brick_wood2.setDurability(blck.durability);
                         brick_wood2.sprite.setPosition(blck.x, blck.y);
                         brick_wood2.sprite.setSize(20, 80);
                         brick_wood2.body = createBody3(brick_wood2, BodyDef.BodyType.DynamicBody);
@@ -446,6 +455,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
                     }
                     else{
                         brick_glass1 = new GlassBlock();
+                        brick_glass1.setDurability(blck.durability);
                         brick_glass1.sprite.setPosition(blck.x, blck.y);
                         brick_glass1.sprite.setSize(20, 80);
                         brick_glass1.body = createBody3(brick_glass1, BodyDef.BodyType.DynamicBody);
@@ -609,49 +619,47 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         world.step(1 / 60f, 6, 2); // Step the physics simulation
         processPendingDestructions();
-        // Update the bird's sprite position based on the physics body's position
-        if(bird_cnt>0 && pig_cntr<=0){
+
+        int pig_check=0;
+        for(int i=0;i<pigs.size();i++){
+            if(pigs.get(i).sprite==null){
+                pig_check++;
+            }
+        }
+        if(pig_check==1){
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-//                    FileOutputStream fileOut = null;
-//                    ObjectOutputStream out = null;
-//                    try {
-//                        GameState gameState = new GameState();
-//
-//                        fileOut = new FileOutputStream("gameSave.dat");
-//                        out = new ObjectOutputStream(fileOut);
-//                        out.writeObject(gameState);
-//                        out.flush();
-//                        System.out.println("Game state has been serialized and saved.");
-//                    } catch (IOException e) {
-//                        System.err.println("Error cleaning the file: " + e.getMessage());
-//                    }
+                    FileOutputStream fileOut = null;
+                    ObjectOutputStream out = null;
+                    try {
+                        fileOut = new FileOutputStream("gameSave1.dat");
+                        System.out.println("Game state has been serialized and saved.");
+                    } catch (IOException e) {
+                        e.printStackTrace(); // Handle exceptions appropriately
+                    }
                     game.setScreen(new VictoryScreen(game)); // Change to your desired screen
                 }
-            }, 1);  // 2-second delay
+            },0.5f);  // 2-second delay
 
         }
         if(bird_cnt==0){
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-//                    FileOutputStream fileOut = null;
-//                    ObjectOutputStream out = null;
-//                    try {
-//                        GameState gameState = new GameState();
-//                        fileOut = new FileOutputStream("gameSave.dat");
-//                        out = new ObjectOutputStream(fileOut);
-//                        out.writeObject(gameState);
-//                        out.flush();
-//                        System.out.println("Game state has been serialized and saved.");
-//                    } catch (IOException e) {
-//                        System.err.println("Error cleaning the file: " + e.getMessage());
-//                    }
+                    FileOutputStream fileOut = null;
+                    ObjectOutputStream out = null;
+                    try {
+                        fileOut = new FileOutputStream("gameSave1.dat");
+                        System.out.println("Game state has been serialized and saved.");
+                    } catch (IOException e) {
+                        e.printStackTrace(); // Handle exceptions appropriately
+                    }
                     game.setScreen(new LoseScreen(game,1)); // Change to your desired screen
                 }
-            }, 1);  // 2-second delay
+            }, 0.5f);  // 2-second delay
         }
+
         // Render the scene
         batch.begin();
         background.draw(batch);
@@ -734,7 +742,7 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
     @Override
     public void hide() {
         // Optional: Implement any cleanup logic for when the screen is hidden
-        gameHandler.saveGameState(pigs, woodenBlocks, glassBlocks);
+//        gameHandler.saveGameState(pigs, woodenBlocks, glassBlocks, glasses,steelBlocks, bird_cnt);
     }
     @Override
     public void dispose() {
@@ -746,10 +754,9 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
 
     // Method to switch to the next bird after one is launched
     private void swamp() {
-        bird_cnt--;
-        if (cntr > 0) {
-            cntr--; // Decrement counter for the next bird
-            bird_black = BirdFactory2.createBird(cntr); // Create the next bird using factory method
+        if (bird_cnt > 0) {
+            bird_cnt--; // Decrement counter for the next bird
+            bird_black = BirdFactory2.createBird(bird_cnt); // Create the next bird using factory method
             bird_black.sprite.setSize(42, 51);
             bird_black.sprite.setPosition(250, 108); // Reset position above the catapult
             bird_black.body = createBody(bird_black, BodyDef.BodyType.DynamicBody); // Create the new body
@@ -836,7 +843,6 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
         body.createFixture(fixtureDef);
         body.setUserData(gameObject);
 
-        System.out.println(body.getUserData()+"yeh kyun");
         shape.dispose();
         return body;
     }

@@ -25,6 +25,7 @@ public class LoseScreen extends ApplicationAdapter implements Screen {
 
     public LoseScreen(Main main, final int level) {
         this.game = main;
+
         backButton = new ImageButton(new SpriteDrawable(new Sprite(new Texture("back.png"))));
         backButton.setSize(Gdx.graphics.getWidth()/13, Gdx.graphics.getHeight()/13);
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
@@ -36,13 +37,13 @@ public class LoseScreen extends ApplicationAdapter implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(level==1){
-                    game.setScreen(new InGameScreen1(game));
+                    game.setScreen(new InGameScreen1(game, true));
                 }
                 else if(level==3){
-                    game.setScreen(new InGameScreen(game));
+                    game.setScreen(new InGameScreen(game, true));
                 }
                 else{
-                    game.setScreen(new InGameScreen2(game));
+                    game.setScreen(new InGameScreen2(game, true));
                 }
             }
         });

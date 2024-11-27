@@ -13,4 +13,5 @@ public class smallpig extends Pigs{
         health=4;
     }
 
+
 }

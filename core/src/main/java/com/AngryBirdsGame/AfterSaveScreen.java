@@ -41,7 +41,7 @@ public class AfterSaveScreen implements Screen {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                game.setScreen(new InGameScreen(game)); // Change to your desired screen
+                game.setScreen(new MainScreen(game)); // Change to your desired screen
             }
         }, 2);  // 2-second delay
     }

@@ -23,7 +23,7 @@ public class Blocks {
         sprite.setPosition(body.getPosition().x*delta - sprite.getWidth()/2, body.getPosition().y*delta - sprite.getHeight()/2);
         sprite.setRotation((float) Math.toDegrees(body.getAngle()));
     }
-    public void takeDamage(float damage){
+    public void takeDamage(int damage){
         durability-=damage;
     }
     public boolean isDestroyed(){
@@ -49,5 +49,8 @@ public class Blocks {
     }
     public Body getBody() {
         return body;
+    }
+    public void setDurability(int durability) {
+        this.durability = durability;
     }
 }

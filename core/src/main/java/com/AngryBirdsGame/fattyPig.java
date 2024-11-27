@@ -13,4 +13,5 @@ public class fattyPig extends Pigs{
         sprite.setSize(40,50);
         this.health=4+1+2;
     }
+
 }

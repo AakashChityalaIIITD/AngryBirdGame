@@ -20,6 +20,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.awt.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.List;
 
 
 public class PauseMenuScreen implements Screen {
@@ -37,8 +41,10 @@ public class PauseMenuScreen implements Screen {
     private float messageDisplayTime = 2f;
     private float elapsedTime = 0;
     Table table;
-    public PauseMenuScreen(Main main, final int level){
+    String filename;
+    public PauseMenuScreen(Main main, final int level, final List<Pigs> pigs1, final List<woodenBrick> bricks1, final List<GlassBlock> glassBlocks1, final List<SquareGlasses> squareGlasses1, final List<SteelBlock> steelBlocks1, final int noOfBirds){
         this.game=main;
+        this.filename = "gameSave" + level + ".dat";
         this.font = new BitmapFont();
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));  // FitViewport maintains aspect ratio
         Gdx.input.setInputProcessor(stage);
@@ -66,13 +72,13 @@ public class PauseMenuScreen implements Screen {
             @Override
            public void clicked(InputEvent event, float x, float y) {
                 if(level==1){
-                    game.setScreen(new InGameScreen1(game));
+                    game.setScreen(new InGameScreen1(game, false));
                 }
                 else if(level==3){
-                    game.setScreen(new InGameScreen(game));
+                    game.setScreen(new InGameScreen(game, false));
                 }
                 else{
-                    game.setScreen(new InGameScreen2(game));
+                    game.setScreen(new InGameScreen2(game, false));
                 }
            }
         });
@@ -80,6 +86,8 @@ public class PauseMenuScreen implements Screen {
         SaveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // give code to save game
+                saveGameState(pigs1, bricks1, glassBlocks1, squareGlasses1, steelBlocks1, noOfBirds);
                 game.setScreen(new AfterSaveScreen(game));
             }
         });
@@ -92,6 +100,99 @@ public class PauseMenuScreen implements Screen {
 
 
     }
+
+
+    public void saveGameState(java.util.List<Pigs> pigs1, java.util.List<woodenBrick> bricks1, java.util.List<GlassBlock> glassBlocks1, java.util.List<SquareGlasses> squareGlasses1, List<SteelBlock> steelBlocks1, int noOfBirds) {
+        GameState gameState = new GameState();
+        gameState.remainingBirds = noOfBirds;
+
+        // Save pigs
+        for (Pigs pig : pigs1) {
+            GameState.PigState pigState;
+            if (pig.sprite != null && pig.body!=null && pig.sprite.getX()>=0 && pig.sprite.getY()>=0) {
+                pigState = new GameState.PigState((int) pig.sprite.getX(), (int) pig.sprite.getY(), pig.health);
+//                System.out.println(pig.body.getPosition().x);
+//                System.out.println(pig.body.getPosition().y);
+            } else {
+                pigState = new GameState.PigState(-1, -1, pig.health);
+            }
+            gameState.pigs.add(pigState);
+
+        }
+
+        // Save wood blocks
+        for (woodenBrick wood : bricks1) {
+            GameState.BlockState blockState;
+            if (wood.sprite != null && wood.body!=null && wood.sprite.getX()>=0 && wood.sprite.getY()>=0) {
+                blockState = new GameState.BlockState((int) wood.sprite.getX(), (int) wood.sprite.getY(), "Wood", wood.durability);
+            } else {
+                blockState = new GameState.BlockState(-1, -1, "Wood", wood.durability);
+            }
+            gameState.blocks.add(blockState);
+
+
+        }
+
+        for (SquareGlasses glass : squareGlasses1) {
+            GameState.BlockState blockState;
+            if (glass.sprite != null && glass.body!=null && glass.sprite.getX()>=0 && glass.sprite.getY()>=0) {
+                blockState = new GameState.BlockState((int) glass.sprite.getX(), (int) glass.sprite.getY(), "Wood", glass.durability);
+            } else {
+                blockState = new GameState.BlockState(-1, -1, "Glass", glass.durability);
+            }
+            gameState.blocks.add(blockState);
+
+
+        }
+
+        // Save glass blocks
+        for (GlassBlock glass : glassBlocks1) {
+            GameState.BlockState blockState;
+            if (glass.sprite != null && glass.body!=null && glass.sprite.getX()>=0 && glass.sprite.getY()>=0) {
+                blockState = new GameState.BlockState((int) glass.sprite.getX(), (int) glass.sprite.getY(), "Glass", glass.durability);
+            } else blockState = new GameState.BlockState(-1, -1, "Glass", glass.durability);
+            gameState.blocks.add(blockState);
+        }
+
+        for (SteelBlock steel : steelBlocks1) {
+            GameState.BlockState blockState;
+            if (steel.sprite != null && steel.body!=null && steel.sprite.getX()>=0 && steel.sprite.getY()>=0) {
+                blockState = new GameState.BlockState((int) steel.sprite.getX(), (int) steel.sprite.getY(), "Glass", steel.durability);
+            } else blockState = new GameState.BlockState(-1, -1, "Steel", steel.durability);
+            gameState.blocks.add(blockState);
+        }
+
+        // Prepare to write to file
+        FileOutputStream fileOut = null;
+        ObjectOutputStream out = null;
+        try {
+
+            fileOut = new FileOutputStream(filename);
+            out = new ObjectOutputStream(fileOut);
+            out.writeObject(gameState); // Write the GameState object
+
+            System.out.println("Game state has been serialized and saved.");
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle exceptions appropriately
+        } finally {
+            // Close streams in the finally block
+            try {
+                if (out != null) {
+                    out.close();
+                }
+                if (fileOut != null) {
+                    fileOut.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace(); // Handle closing exceptions
+            }
+        }
+
+
+        System.out.println("Saving state: " + gameState.serialize());
+    }
+
+
     @Override
     public void show() {
         font = new BitmapFont();

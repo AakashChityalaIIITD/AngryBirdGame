@@ -55,4 +55,7 @@ public class Pigs {
     public Body getBody(){
         return body;
     }
+    public void setHealth(int health) {
+        this.health = health;
+    }
 }

@@ -59,21 +59,21 @@ class SavedGameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Change to a new screen, e.g., NewGameScreen
-                game.setScreen(new LevelScreen(game));
+                game.setScreen(new InGameScreen1(game, false));
             }
         });
         Game2.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Change to a new screen, e.g., NewGameScreen
-                game.setScreen(new LevelScreen(game));
+                game.setScreen(new InGameScreen2(game, false));
             }
         });
         Game3.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Change to a new screen, e.g., NewGameScreen
-                game.setScreen(new LevelScreen(game));
+                game.setScreen(new InGameScreen(game, false));
             }
         });
 

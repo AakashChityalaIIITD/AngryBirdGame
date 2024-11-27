@@ -18,6 +18,9 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +28,9 @@ import java.util.List;
 class BirdFactory {
     public static AngryBird createBird(int type) {
         switch (type) {
-            case 1: return new RedAngryBird();
-            case 2: return new BlackAngryBird();
-            case 3: return new BlueAngryBird();
+            case 2: return new RedAngryBird();
+            case 3: return new BlackAngryBird();
+            case 1: return new BlueAngryBird();
             default: return new BlueAngryBird();
         }
     }
@@ -37,14 +40,9 @@ class BirdFactory {
 public class InGameScreen2 extends ApplicationAdapter implements Screen {
     private Main game;
     private final List<Body> bodiesToDestroy = new ArrayList<Body>();
+    boolean chkNewGame;
 
-    private List<Pigs> pigs;
-    boolean chk;
-    private List<woodenBrick> woodenBlocks;
-    private List<GlassBlock> glassBlocks;
-    private List<SteelBlock> steelBlocks;
-    private List<AngryBird> birds;
-
+    GameHandler gameHandler;
     int black_bird_flight = 0;
     boolean isDragging = false; // Track if bird is being dragged
     private Stage stage;
@@ -55,6 +53,14 @@ public class InGameScreen2 extends ApplicationAdapter implements Screen {
     private Body groundBody; // Box2D body for ground
     private AngryBird bird_black;
     private ImageButton pause;
+
+    private List<Pigs> pigs;
+    boolean chk;
+    private List<woodenBrick> woodenBlocks;
+    private List<GlassBlock> glassBlocks;
+    private List<SteelBlock> steelBlocks;
+    private List<AngryBird> birds;
+    private List<SquareGlasses> glasses;
 
     private final float PPM = 100f;
     private ShapeRenderer shapeRenderer; // For trajectory
@@ -69,11 +75,24 @@ public class InGameScreen2 extends ApplicationAdapter implements Screen {
     private kingpig pig_king;
     private fattyPig pig_fatty;
 
-    public InGameScreen2(Main main) {
+    public InGameScreen2(Main main, boolean chkNewGame) {
+        gameHandler = new GameHandler("gameSave2.dat");
         this.game = main;
+        this.chkNewGame = chkNewGame;
         this.batch = new SpriteBatch();
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         Gdx.input.setInputProcessor(stage);
+
+        glasses = new ArrayList<SquareGlasses>();
+        pigs = new ArrayList<Pigs>();
+        steelBlocks = new ArrayList<SteelBlock>();
+        woodenBlocks = new ArrayList<woodenBrick>();
+        glassBlocks = new ArrayList<GlassBlock>();
+        birds = new ArrayList<AngryBird>();
+
+        gameHandler = new GameHandler("gameSave2.dat");
+        chk = gameHandler.loadGameState(pigs, woodenBlocks, glassBlocks, steelBlocks, birds);
+
 
         this.world = new World(new Vector2(0f, -9.8f), true);
         initializeContactListener();
@@ -99,7 +118,7 @@ public class InGameScreen2 extends ApplicationAdapter implements Screen {
         pause.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new PauseMenuScreen(game,2));
+                game.setScreen(new PauseMenuScreen(game,2, pigs,woodenBlocks,glassBlocks,glasses,steelBlocks, bird_cnt));
             }
         });
 
@@ -140,11 +159,12 @@ public class InGameScreen2 extends ApplicationAdapter implements Screen {
             }
         });
         for(int i=0;i<6;i++){
-            if(arr.get(i)==null){
+            if(glasses.get(i)==null){
                 System.out.println("null");
             }
-            if(arr.get(i)!=null){
-                update_block(arr.get(i));
+            if(glasses.get(i)!=null){
+                System.out.println(glasses.size());
+                update_block(glasses.get(i));
             }
         }
     }
@@ -371,24 +391,175 @@ public class InGameScreen2 extends ApplicationAdapter implements Screen {
     }
 
     private void initializeObstacles() {
-        // Initialize pigs
+        if (chk && (!chkNewGame)) {
+            bird_cnt = gameHandler.loadNoOfBirds();
+            bird_cnt++;
+            swamp();
+            List<GameState.PigState> p = gameHandler.loadPigs();
+            System.out.println(p.size());
+            List<GameState.BlockState> b = gameHandler.loadBlocks();
+            int it=0;
+            for (GameState.PigState pig : p) {
+                if(it==0) {
+                    if (pig.x == -1 && pig.y == -1) {
+                        pig_smallpig = new smallpig();
+                        pig_smallpig.sprite = null;
+                        bodiesToDestroy.add(pig_smallpig.body);
+                        pigs.add(pig_smallpig);
+                    } else {
+                        pig_smallpig = new smallpig();
+                        pig_smallpig.setHealth(pig.durability);
+                        pig_smallpig.sprite.setPosition(pig.x, pig.y);
+                        pig_smallpig.sprite.setSize(65, 68);
+                        pig_smallpig.body = createBody2(pig_smallpig, BodyDef.BodyType.DynamicBody);
+                        pigs.add(pig_smallpig);
+                    }
+                }
+                if (it==1){
+                    if (pig.x == -1 && pig.y == -1) {
+                        pig_fatty = new fattyPig();
+                        pig_fatty.sprite = null;
+                        bodiesToDestroy.add(pig_fatty.body);
+                        pigs.add(pig_fatty);
+                    } else {
+                        pig_fatty = new fattyPig();
+                        pig_fatty.setHealth(pig.durability);
+                        pig_fatty.sprite.setPosition(pig.x, pig.y);
+                        pig_fatty.sprite.setSize(65, 68);
+                        pig_fatty.body = createBody2(pig_fatty, BodyDef.BodyType.DynamicBody);
+                        pigs.add(pig_fatty);
+                    }
+                }
+                it++;
+            }
+            int iter=0;
+            for(GameState.BlockState blck:b){
+                if(iter==0){
+                    if (blck.x == -1 && blck.y == -1) {
+                           squareGlasses1=new SquareGlasses();
+                           squareGlasses1.sprite=null;
+                           bodiesToDestroy.add(squareGlasses1.body);
+                           glasses.add(squareGlasses1);
+                    }
+                    else{
+                        squareGlasses1 = new SquareGlasses();
+                        squareGlasses1.setDurability(blck.durability);
+                        squareGlasses1.sprite.setPosition(blck.x, blck.y);
+                        squareGlasses1.sprite.setSize(50, 50);
+                        squareGlasses1.body = createBody3(squareGlasses1, BodyDef.BodyType.DynamicBody);
+
+                       glasses.add(squareGlasses1);
+                    }
+
+                }
+                if(iter==1){
+                    if (blck.x == -1 && blck.y == -1) {
+                        squareGlasses2=new SquareGlasses();
+                        squareGlasses2.sprite=null;
+                        bodiesToDestroy.add(squareGlasses2.body);
+                        glasses.add(squareGlasses2);
+                    }
+                    else{
+                        squareGlasses2 = new SquareGlasses();
+                        squareGlasses2.setDurability(blck.durability);
+                        squareGlasses2.sprite.setPosition(blck.x, blck.y);
+                        squareGlasses2.sprite.setSize(50, 50);
+                        squareGlasses2.body = createBody3(squareGlasses2, BodyDef.BodyType.DynamicBody);
+
+                        glasses.add(squareGlasses2);
+                    }
+
+                }
+                if(iter==2){
+                    if (blck.x == -1 && blck.y == -1) {
+                        squareGlasses3=new SquareGlasses();
+                        squareGlasses3.sprite=null;
+                        bodiesToDestroy.add(squareGlasses3.body);
+                        glasses.add(squareGlasses3);
+                    }
+                    else{
+                        squareGlasses3 = new SquareGlasses();
+                        squareGlasses3.setDurability(blck.durability);
+                        squareGlasses3.sprite.setPosition(blck.x, blck.y);
+                        squareGlasses3.sprite.setSize(50, 50);
+                        squareGlasses3.body = createBody3(squareGlasses3, BodyDef.BodyType.DynamicBody);
+
+                        glasses.add(squareGlasses3);
+                    }
+
+                }
+                if(iter==3){
+                    if (blck.x == -1 && blck.y == -1) {
+                        squareGlasses4=new SquareGlasses();
+                        squareGlasses4.sprite=null;
+                        bodiesToDestroy.add(squareGlasses4.body);
+                        glasses.add(squareGlasses4);
+                    }
+                    else{
+                        squareGlasses4 = new SquareGlasses();
+                        squareGlasses4.setDurability(blck.durability);
+                        squareGlasses4.sprite.setPosition(blck.x, blck.y);
+                        squareGlasses4.sprite.setSize(50, 50);
+                        squareGlasses4.body = createBody3(squareGlasses4, BodyDef.BodyType.DynamicBody);
+
+                        glasses.add(squareGlasses4);
+                    }
+
+                }
+                if(iter==4){
+                    if (blck.x == -1 && blck.y == -1) {
+                        squareGlasses5=new SquareGlasses();
+                        squareGlasses5.sprite=null;
+                        bodiesToDestroy.add(squareGlasses5.body);
+                        glasses.add(squareGlasses5);
+                    }
+                    else{
+                        squareGlasses5 = new SquareGlasses();
+                        squareGlasses5.setDurability(blck.durability);
+                        squareGlasses5.sprite.setPosition(blck.x, blck.y);
+                        squareGlasses5.sprite.setSize(50, 50);
+                        squareGlasses5.body = createBody3(squareGlasses5, BodyDef.BodyType.DynamicBody);
+
+                        glasses.add(squareGlasses5);
+                    }
+
+                }
+                if(iter==5){
+                    if (blck.x == -1 && blck.y == -1) {
+                        squareGlasses6=new SquareGlasses();
+                        squareGlasses6.sprite=null;
+                        bodiesToDestroy.add(squareGlasses6.body);
+                        glasses.add(squareGlasses6);
+                    }
+                    else{
+                        squareGlasses6 = new SquareGlasses();
+                        squareGlasses6.setDurability(blck.durability);
+                        squareGlasses6.sprite.setPosition(blck.x, blck.y);
+                        squareGlasses6.sprite.setSize(50, 50);
+                        squareGlasses6.body = createBody3(squareGlasses6, BodyDef.BodyType.DynamicBody);
+
+                        glasses.add(squareGlasses6);
+                    }
+
+                }
+                iter++;
+            }
+        }
+        else {
         pig_smallpig = new smallpig();
         pig_smallpig.sprite.setPosition(850, 100); // Adjusted position
         pig_smallpig.sprite.setSize(45, 50);
         pig_smallpig.body = createBody2(pig_smallpig, BodyDef.BodyType.DynamicBody);
         pig_smallpig.body.setAwake(false);
+        pigs.add(pig_smallpig);
 
-        pig_king = new kingpig();
-        pig_king.sprite.setPosition(900, 200); // Above small pig
-        pig_king.sprite.setSize(45, 50);
-        pig_king.body = createBody2(pig_king, BodyDef.BodyType.DynamicBody);
-        pig_king.body.setAwake(false);
+        pig_fatty = new fattyPig();
+        pig_fatty.sprite.setPosition(900, 200); // Above small pig
+            pig_fatty.sprite.setSize(45, 50);
+            pig_fatty.body = createBody2(pig_fatty, BodyDef.BodyType.DynamicBody);
+            pig_fatty.body.setAwake(false);
+        pigs.add(pig_fatty);
 
-//        pig_fatty = new fattyPig();
-//        pig_fatty.sprite.setPosition(880, 300); // Above king pig
-//        pig_fatty.sprite.setSize(45, 50);
-//        pig_fatty.body = createBody2(pig_fatty, BodyDef.BodyType.DynamicBody);
-//        pig_fatty.body.setAwake(false);
 
         squareGlasses1=new SquareGlasses();
         squareGlasses2=new SquareGlasses();
@@ -396,15 +567,15 @@ public class InGameScreen2 extends ApplicationAdapter implements Screen {
         squareGlasses4=new SquareGlasses();
         squareGlasses5=new SquareGlasses();
         squareGlasses6=new SquareGlasses();
-        arr.add(squareGlasses1);
-        arr.add(squareGlasses2);
-        arr.add(squareGlasses3);
-        arr.add(squareGlasses4);
-        arr.add(squareGlasses5);
-        arr.add(squareGlasses6);
+        glasses.add(squareGlasses1);
+        glasses.add(squareGlasses2);
+        glasses.add(squareGlasses3);
+        glasses.add(squareGlasses4);
+        glasses.add(squareGlasses5);
+        glasses.add(squareGlasses6);
 
         for(int i=0;i<3;i++){
-            SquareGlasses x =arr.get(i);
+            SquareGlasses x =glasses.get(i);
 
             x.sprite.setPosition(850-50,100+50*i);
             x.sprite.setSize(50,50);
@@ -414,11 +585,16 @@ public class InGameScreen2 extends ApplicationAdapter implements Screen {
         }
 
         for(int i=3;i<6;i++){
-            SquareGlasses x=arr.get(i);
+            SquareGlasses x=glasses.get(i);
             x.sprite.setPosition(950,100+50*(i-3));
             x.sprite.setSize(50,50);
             x.body=createBody3(x, BodyDef.BodyType.DynamicBody);
             x.body.setAwake(false);
+        }
+
+
+
+
         }
     }
     private void initializeBird() {
@@ -534,24 +710,47 @@ public class InGameScreen2 extends ApplicationAdapter implements Screen {
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         world.step(1 / 60f, 6, 2); // Step the physics
-        System.out.println("pig_cntr"+pig_cntr+"bird_cnr"+bird_cnt);
-        if(bird_cnt>0 && pig_cntr<=0){
+        //System.out.println("pig_cntr"+pig_cntr+"bird_cnr"+bird_cnt);
+        int pig_check=0;
+        for(int i=0;i<pigs.size();i++){
+            if(pigs.get(i).sprite==null){
+                pig_check++;
+            }
+        }
+        if(pig_check==2){
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
+                    FileOutputStream fileOut = null;
+                    ObjectOutputStream out = null;
+                    try {
+                        fileOut = new FileOutputStream("gameSave2.dat");
+                        System.out.println("Game state has been serialized and saved.");
+                    } catch (IOException e) {
+                        e.printStackTrace(); // Handle exceptions appropriately
+                    }
                     game.setScreen(new VictoryScreen(game)); // Change to your desired screen
                 }
-            }, 1);  // 2-second delay
+            },0.5f);  // 2-second delay
 
         }
         if(bird_cnt==0){
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
+                    FileOutputStream fileOut = null;
+                    ObjectOutputStream out = null;
+                    try {
+                        fileOut = new FileOutputStream("gameSave2.dat");
+                        System.out.println("Game state has been serialized and saved.");
+                    } catch (IOException e) {
+                        e.printStackTrace(); // Handle exceptions appropriately
+                    }
                     game.setScreen(new LoseScreen(game,2)); // Change to your desired screen
                 }
-            }, 1);  // 2-second delay
+            }, 0.5f);  // 2-second delay
         }
+
         processPendingDestructions();
         batch.begin();
         background.draw(batch);
@@ -566,19 +765,18 @@ public class InGameScreen2 extends ApplicationAdapter implements Screen {
             bird_black.sprite.draw(batch);
         }
         update_pos(pig_smallpig);
-        update_pos(pig_king);
+        update_pos(pig_fatty);
         for(int i=0;i<6;i++){
-            SquareGlasses x=arr.get(i);
+            SquareGlasses x=glasses.get(i);
             update_block(x);
         }
-        if(pig_king.sprite!=null){
-            pig_king.sprite.draw(batch);
-        }
-        if(pig_smallpig.sprite!=null){
-            pig_smallpig.sprite.draw(batch);
+        for (Pigs pig : pigs) {
+            if (pig != null && pig.body != null && pig.sprite != null) { // Check for null
+                pig.sprite.draw(batch);
+            }
         }
         for(int i=0;i<6;i++) {
-            SquareGlasses y = arr.get(i);
+            SquareGlasses y = glasses.get(i);
             if (y == null) {
                 System.out.println("null" + i);
             }
@@ -613,6 +811,7 @@ public class InGameScreen2 extends ApplicationAdapter implements Screen {
 
     @Override
     public void hide() {
+//        gameHandler.saveGameState(pigs,woodenBlocks,glassBlocks,glasses,steelBlocks, bird_cnt);
         // Optional: Implement any cleanup logic for when the screen is hidden
     }
     @Override
@@ -625,10 +824,9 @@ public class InGameScreen2 extends ApplicationAdapter implements Screen {
 
     // Method to switch to the next bird after one is launched
     private void swamp() {
-        bird_cnt--;
-        if (cntr > 0) {
-            cntr--; // Decrement counter for the next bird
-            bird_black = BirdFactory.createBird(cntr); // Create the next bird using factory method
+        if (bird_cnt > 0) {
+            bird_cnt--; // Decrement counter for the next bird
+            bird_black = BirdFactory.createBird(bird_cnt); // Create the next bird using factory method
             bird_black.sprite.setSize(42, 51);
             bird_black.sprite.setPosition(250, 108); // Reset position above the catapult
             bird_black.body = createBody(bird_black, BodyDef.BodyType.DynamicBody); // Create the new body
