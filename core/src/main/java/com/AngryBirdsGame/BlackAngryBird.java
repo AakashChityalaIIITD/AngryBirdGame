@@ -13,6 +13,7 @@ public class BlackAngryBird extends AngryBird{
         this.speed=1.2f;
         this.impact=2;
         sprite.setSize(42,51);
+        sprite.setPosition(250,180);
 
     }
     public Sprite getSprite(){

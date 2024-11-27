@@ -37,7 +37,7 @@ public class PauseMenuScreen implements Screen {
     private float messageDisplayTime = 2f;
     private float elapsedTime = 0;
     Table table;
-    public PauseMenuScreen(Main main){
+    public PauseMenuScreen(Main main, final int level){
         this.game=main;
         this.font = new BitmapFont();
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));  // FitViewport maintains aspect ratio
@@ -65,7 +65,15 @@ public class PauseMenuScreen implements Screen {
         ResumeButton.addListener(new ClickListener() {
             @Override
            public void clicked(InputEvent event, float x, float y) {
-               game.setScreen(new InGameScreen(game));
+                if(level==1){
+                    game.setScreen(new InGameScreen1(game));
+                }
+                else if(level==3){
+                    game.setScreen(new InGameScreen(game));
+                }
+                else{
+                    game.setScreen(new InGameScreen2(game));
+                }
            }
         });
 

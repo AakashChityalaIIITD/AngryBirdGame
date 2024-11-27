@@ -9,8 +9,6 @@ public class woodenBrick extends Blocks{
     public woodenBrick() {
         super("woody",0,0,1);
         this.sprite=new Sprite(new Texture("woodenStraightBrick.png"));
-    }
-    public Sprite getSprite(){
-        return sprite;
+        this.durability=1;
     }
 }
