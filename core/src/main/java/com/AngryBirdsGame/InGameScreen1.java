@@ -114,10 +114,11 @@ public class InGameScreen1 extends ApplicationAdapter implements Screen {
         pause.setSize(50, 60);
         pause.setPosition(Gdx.graphics.getWidth() - pause.getWidth(), Gdx.graphics.getHeight() - pause.getHeight());
         stage.addActor(pause);
+        final InGameScreen1 ig_screen1=this;
         pause.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new PauseMenuScreen(game,1, pigs,woodenBlocks,glassBlocks,glasses,steelBlocks, bird_cnt));
+                game.setScreen(new PauseMenuScreen(game,1, pigs,woodenBlocks,glassBlocks,glasses,steelBlocks, bird_cnt,ig_screen1,null,null));
             }
         });
 

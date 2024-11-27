@@ -42,7 +42,7 @@ public class PauseMenuScreen implements Screen {
     private float elapsedTime = 0;
     Table table;
     String filename;
-    public PauseMenuScreen(Main main, final int level, final List<Pigs> pigs1, final List<woodenBrick> bricks1, final List<GlassBlock> glassBlocks1, final List<SquareGlasses> squareGlasses1, final List<SteelBlock> steelBlocks1, final int noOfBirds){
+    public PauseMenuScreen(Main main, final int level, final List<Pigs> pigs1, final List<woodenBrick> bricks1, final List<GlassBlock> glassBlocks1, final List<SquareGlasses> squareGlasses1, final List<SteelBlock> steelBlocks1, final int noOfBirds, final InGameScreen1 ing1, final InGameScreen ing3, final InGameScreen2 ing2){
         this.game=main;
         this.filename = "gameSave" + level + ".dat";
         this.font = new BitmapFont();
@@ -72,13 +72,13 @@ public class PauseMenuScreen implements Screen {
             @Override
            public void clicked(InputEvent event, float x, float y) {
                 if(level==1){
-                    game.setScreen(new InGameScreen1(game, false));
+                    game.setScreen(ing1);
                 }
                 else if(level==3){
-                    game.setScreen(new InGameScreen(game, false));
+                    game.setScreen(ing3);
                 }
                 else{
-                    game.setScreen(new InGameScreen2(game, false));
+                    game.setScreen(ing2);
                 }
            }
         });
