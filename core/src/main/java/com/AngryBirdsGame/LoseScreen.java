@@ -40,7 +40,7 @@ public class LoseScreen extends ApplicationAdapter implements Screen {
                     game.setScreen(new InGameScreen1(game, true));
                 }
                 else if(level==3){
-                    game.setScreen(new InGameScreen(game, true));
+                    game.setScreen(new InGameScreen3(game, true));
                 }
                 else{
                     game.setScreen(new InGameScreen2(game, true));

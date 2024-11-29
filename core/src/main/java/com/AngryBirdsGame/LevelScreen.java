@@ -73,7 +73,7 @@ class LevelScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Change to a new screen, e.g., NewGameScreen
-                game.setScreen(new InGameScreen(game, true));
+                game.setScreen(new InGameScreen3(game, true));
             }
         });
 

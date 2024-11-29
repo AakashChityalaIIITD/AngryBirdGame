@@ -11,8 +11,8 @@ class AngryBirdTest {
     AngryBird ac;
     @BeforeEach
     void setUp() {
-        Sprite sp=new Sprite();
-        ac=new AngryBird("birdy", 25, 25, sp);
+        Sprite sp = new Sprite();
+        ac = new AngryBird("birdy", 25, 25, sp);
     }
 
     @Test

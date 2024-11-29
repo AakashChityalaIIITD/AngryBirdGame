@@ -17,13 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 class BirdFactory3 {
     public static AngryBird createBird(int type) {
         switch (type) {
@@ -34,7 +33,7 @@ class BirdFactory3 {
         }
     }
 }
-public class InGameScreen extends ApplicationAdapter implements Screen {
+public class InGameScreen3 extends ApplicationAdapter implements Screen {
     private Main game;
     boolean chkNewGame;
     private final List<Body> bodiesToDestroy = new ArrayList<Body>();
@@ -71,7 +70,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
     private kingpig pig_king;
     private fattyPig pig_fatty;
 
-    public InGameScreen(Main main, boolean chkNewGame) {
+    public InGameScreen3(Main main, boolean chkNewGame) {
         this.game = main;
         this.chkNewGame = chkNewGame;
         this.batch = new SpriteBatch();
@@ -108,7 +107,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         pause.setSize(50, 60);
         pause.setPosition(Gdx.graphics.getWidth() - pause.getWidth(), Gdx.graphics.getHeight() - pause.getHeight());
         stage.addActor(pause);
-        final InGameScreen igScreen_temp=this;
+        final InGameScreen3 igScreen_temp=this;
         pause.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -261,6 +260,12 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         if (bird != null && brick != null) {
             // Handle the collision between bird and brick
             System.out.println("Bird hit a brick!");
+            brick.takeDamage(bird.getImpactPower());
+            if (brick.isDestroyed()) {
+                bodiesToDestroy.add(brick.body);
+                brick.sprite = null;
+            }
+
             // Add any additional logic to handle this collision here
         } else {
             System.out.println("Collision not identified properly: Bird: " + (bird != null) + " Brick: " + (brick != null));
@@ -271,6 +276,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
             bodiesToDestroy.add(brick.body);
             brick.sprite=null;
         }
+
     }
     private void handleBrickBrickCollision(Body fixtureA, Body fixtureB) {
         Blocks brick1 = null;
@@ -302,6 +308,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
             bodiesToDestroy.add(brick2.body);
             brick2.sprite=null;
         }
+
     }
     private void handleBrickPigCollision(Body fixtureA, Body fixtureB) {
         Pigs pigs = null;
@@ -452,10 +459,13 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
                         squareGlasses1.sprite=null;
                         bodiesToDestroy.add(squareGlasses1.body);
                         steelBlocks.add(squareGlasses1);
+                        System.out.println("brick: " + squareGlasses1.getDurability());
+
                     }
                     else{
                         squareGlasses1 = new SteelBlock();
                         squareGlasses1.setDurability(blck.durability);
+                        System.out.println("brick: " + squareGlasses1.getDurability());
                         squareGlasses1.sprite.setPosition(blck.x, blck.y);
                         squareGlasses1.sprite.setSize(50, 50);
                         squareGlasses1.body = createBody3(squareGlasses1, BodyDef.BodyType.DynamicBody);
@@ -690,16 +700,16 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
 
         squareGlasses1=new SteelBlock();
         squareGlasses2=new SteelBlock();
-        squareGlasses3=new SteelBlock();
+//        squareGlasses3=new SteelBlock();
         squareGlasses4=new SteelBlock();
         squareGlasses5=new SteelBlock();
-        squareGlasses6=new SteelBlock();
+//        squareGlasses6=new SteelBlock();
         squareGlasses7=new SteelBlock();
         squareGlasses8=new SteelBlock();
-        squareGlasses9=new SteelBlock();
+//        squareGlasses9=new SteelBlock();
         squareGlasses10=new SteelBlock();
         squareGlasses11=new SteelBlock();
-        squareGlasses12=new SteelBlock();
+//        squareGlasses12=new SteelBlock();
         steelBlocks.add(squareGlasses1);
         steelBlocks.add(squareGlasses2);
         steelBlocks.add(squareGlasses3);
@@ -712,8 +722,10 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
             steelBlocks.add(squareGlasses10);
             steelBlocks.add(squareGlasses11);
             steelBlocks.add(squareGlasses12);
+            System.out.println("brick: " + squareGlasses1.getDurability());
 
-        for(int i=0;i<3;i++){
+
+            for(int i=0;i<2;i++){
             SteelBlock x =steelBlocks.get(i);
 
             x.sprite.setPosition(850-50-30-10,100+50*i);
@@ -723,21 +735,21 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
 
         }
 
-        for(int i=3;i<6;i++){
+        for(int i=3;i<5;i++){
             SteelBlock x=steelBlocks.get(i);
             x.sprite.setPosition(860-30,100+50*(i-3));
             x.sprite.setSize(50,50);
             x.body=createBody3(x, BodyDef.BodyType.DynamicBody);
             x.body.setAwake(false);
         }
-        for(int i=6;i<9;i++){
+        for(int i=6;i<8;i++){
             SteelBlock x=steelBlocks.get(i);
             x.sprite.setPosition(940,100+50*(i-6));
             x.sprite.setSize(50,50);
             x.body=createBody3(x, BodyDef.BodyType.DynamicBody);
             x.body.setAwake(false);
          }
-          for(int i=9;i<12;i++){
+          for(int i=9;i<11;i++){
             SteelBlock x=steelBlocks.get(i);
             x.sprite.setPosition(1000,100+50*(i-9));
             x.sprite.setSize(50,50);
@@ -764,29 +776,13 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         cata.sprite.setPosition(250, 108); // Set catapult position
     }
 
-    private void updateBirdPosition() {
-        if (bird_black != null) {
-            Vector2 bodyPosition = bird_black.body.getPosition();
-            // Set the sprite's position based on the body's position
-            bird_black.sprite.setPosition(
-                (bodyPosition.x * PPM - bird_black.sprite.getWidth() / 2),
-                (bodyPosition.y * PPM - bird_black.sprite.getHeight() / 2)
-            );
 
-            // Check the horizontal velocity to determine when to switch birds
-            float horizontalVelocity = bird_black.body.getLinearVelocity().x;
-            if ((horizontalVelocity == 0 || bird_black.sprite.getX()<=0 || bird_black.body.getPosition().x>12) && black_bird_flight == 1) {
-                black_bird_flight = 0; // Reset flight status
-                swamp(); // Switch to the next bird
-            }
-        }
-    }
 
     private void drawTrajectory(float birdX, float birdY, float endX, float endY) {
         Vector2 launchVelocity = calculateLaunchVelocity(endX, endY);
 
-        // Physics parameters
-        float g = world.getGravity().y; // Gravity in world units (negative)
+
+        float g = world.getGravity().y;
         float step = 0.05f;
         int maxSteps = 12;
         float worldBirdX = birdX / PPM;
@@ -831,6 +827,40 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
     public void show() {
         // Optional: Implement any initialization logic for when the screen is shown
     }
+
+    @Override
+    public void create() {
+
+    }
+
+    private void updateBirdPosition() {
+        if (bird_black != null && bird_black.body != null) {
+            Vector2 bodyPosition = bird_black.body.getPosition();
+            // Set the sprite's position based on the body's position
+            bird_black.sprite.setPosition(
+                (bodyPosition.x * PPM - bird_black.sprite.getWidth() / 2),
+                (bodyPosition.y * PPM - bird_black.sprite.getHeight() / 2)
+            );
+            if (bird_black instanceof BlueAngryBird && bird_black.body.getPosition().x >= Gdx.graphics.getWidth()/PPM/2 && !bird_black.isSplit()) {
+                //Simulate split here.  This is a simplification because BlueAngryBird doesn't have a split() method.
+                System.out.println("beginning");
+                bird_black.setSplit(true); //Prevent repeated splits
+                simulateSplit(bird_black);
+
+            }
+
+            // Check the horizontal velocity to determine when to switch birds
+            if (bird_black != null && bird_black.body != null) {
+                float horizontalVelocity = bird_black.body.getLinearVelocity().x;
+                if ((horizontalVelocity == 0 || bird_black.sprite.getX() <= 0 || bird_black.body.getPosition().x > 12) && black_bird_flight == 1) {
+                    black_bird_flight = 0; // Reset flight status
+                    swamp(); // Switch to the next bird
+                }
+            }
+        }
+    }
+
+
     void update_pos(Pigs pig){
         if(pig!=null && pig.sprite!=null){
             Vector2 bodyPosition = pig.body.getPosition();
@@ -845,6 +875,20 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
             }
         }
     }
+    void update_new_bird_pos(AngryBird bird) {
+        if(bird!=null && bird.sprite!=null){
+            Vector2 bodyPosition = bird.body.getPosition();
+            bird.sprite.setPosition(
+                (bodyPosition.x * PPM - bird.sprite.getWidth() / 2),
+                bodyPosition.y * PPM - bird.sprite.getHeight() / 2
+            );
+            if(bird.sprite.getX()<=0 || bird.sprite.getY()<=0){
+                pig_cntr--;
+                bird.sprite=null;
+                bodiesToDestroy.add(bird.body);
+            }
+        }
+    }
     void update_block(Blocks blc){
         if(blc!=null && blc.sprite!=null){
             Vector2 bodyPosition = blc.body.getPosition();
@@ -852,23 +896,24 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
                 (bodyPosition.x * PPM - blc.sprite.getWidth() / 2) ,
                 (bodyPosition.y * PPM - blc.sprite.getHeight() / 2)
             );
-//            System.out.println(blc.sprite.getX()+"blocksSprite"+blc.sprite.getY());
-//            System.out.println(blc.body.getPosition()+"Body wlag");
-
         }
     }
 
     @Override
     public void render(float delta) {
-
+        processPendingDestructions();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        world.step(1 / 60f, 6, 2);//// Step the physics simulation
+        world.step(1 / 60f, 100, 100);//// Step the physics simulation
+
+
+
         int pig_check=0;
         for(int i=0;i<pigs.size();i++){
             if(pigs.get(i).sprite==null){
                 pig_check++;
             }
         }
+
         if(pig_check==3){
             Timer.schedule(new Timer.Task() {
                 @Override
@@ -886,7 +931,7 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
             },0.5f);  // 2-second delay
 
         }
-        if(bird_cnt==0){
+        else if(bird_cnt==0){
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
@@ -902,7 +947,6 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
                 }
             }, 0.8f);  // 2-second delay
         }
-        processPendingDestructions();
         batch.begin();
         background.draw(batch);
         groundSprite.draw(batch);
@@ -921,6 +965,12 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         for(int i=0;i<12;i++){
             SteelBlock x=steelBlocks.get(i);
             update_block(x);
+        }
+        for (AngryBird bird : birds) {
+            update_new_bird_pos(bird);
+            if (bird!=null && bird.sprite!=null && bird.body != null) {
+                bird.sprite.draw(batch);
+            }
         }
         for (Pigs pig : pigs) {
             if (pig != null && pig.body != null && pig.sprite != null) { // Check for null
@@ -961,10 +1011,34 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         background.setSize(width, height);
     }
 
+    private void simulateSplit(AngryBird bird) {
+
+        Vector2 velocity = bird.body.getLinearVelocity();
+        int x = (int) bird.sprite.getX();
+        int y = (int) bird.sprite.getY();
+        System.out.println(x + "--" + y);
+
+        float splitAngleOffset = 20f;
+        float velocityScale = 0.7f;
+
+        for (int i = 0; i < 3; i++) {
+            Vector2 position = bird.body.getPosition();
+            float angle = velocity.angle() + splitAngleOffset * (i - 1);
+            Vector2 newVelocity = velocity.cpy().rotate(angle);
+            SmallBlueBird newBird = new SmallBlueBird(x, y, world);
+            newBird.sprite.setPosition(x,y);
+            newBird.body = createBody(newBird, BodyDef.BodyType.DynamicBody);
+            newBird.body.setLinearVelocity(newVelocity.scl(velocityScale));
+            birds.add(newBird);
+        }
+
+//        world.destroyBody(bird.body);
+//        bird_black = null;
+
+    }
+
     @Override
     public void hide() {
-//        gameHandler.saveGameState(pigs,woodenBlocks,glassBlocks,glasses,steelBlocks, bird_cnt);
-        // Optional: Implement any cleanup logic for when the screen is hidden
     }
     @Override
     public void dispose() {
@@ -972,6 +1046,28 @@ public class InGameScreen extends ApplicationAdapter implements Screen {
         batch.dispose();
         shapeRenderer.dispose();
         stage.dispose();
+
+        // Dispose textures if they are not automatically dealt with
+        background.getTexture().dispose();
+        groundSprite.getTexture().dispose();
+        // You might want to loop through all birds, pigs, and blocks to dispose their textures
+        for (AngryBird bird : birds) {
+            bird.sprite.getTexture().dispose();
+        }
+        for (Pigs pig : pigs) {
+            pig.sprite.getTexture().dispose();
+        }
+        for (Blocks block : woodenBlocks) {
+            block.sprite.getTexture().dispose();
+        }
+        for (Blocks block : glassBlocks) {
+            block.sprite.getTexture().dispose();
+        }
+        for (SteelBlock block : steelBlocks) {
+            block.sprite.getTexture().dispose();
+        }
+
+        Gdx.input.setInputProcessor(null);
     }
 
     // Method to switch to the next bird after one is launched

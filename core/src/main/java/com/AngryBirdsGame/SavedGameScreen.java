@@ -73,7 +73,7 @@ class SavedGameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Change to a new screen, e.g., NewGameScreen
-                game.setScreen(new InGameScreen(game, false));
+                game.setScreen(new InGameScreen3(game, false));
             }
         });
 

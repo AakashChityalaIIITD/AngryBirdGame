@@ -10,7 +10,7 @@ public class SteelBlock extends Blocks {
     public SteelBlock() {
         super("stelly",0,0,3);
         this.sprite=new Sprite(new Texture("steelSqaure.png"));
-        this.durability=3;
+        this.durability=5;
 
     }
 

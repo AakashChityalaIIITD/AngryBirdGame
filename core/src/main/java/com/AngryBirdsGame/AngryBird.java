@@ -13,14 +13,27 @@ class AngryBird {
     public int impact;
     public float speed;
     public Body body;
+    boolean isSplit;
 
     public AngryBird(String name,int posX,int posY,Sprite sprite){
         this.name=name;
         this.posX=posX;
         this.posY=posY;
         this.sprite=sprite;
+        this.isSplit = false;
+
 
     }
+
+    public boolean isSplit() {
+        return isSplit;
+    }
+
+    public void setSplit(boolean split) {
+        isSplit = split;
+    }
+
+
 
 
 

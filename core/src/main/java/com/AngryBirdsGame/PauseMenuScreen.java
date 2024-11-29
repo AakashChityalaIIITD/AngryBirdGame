@@ -40,13 +40,13 @@ public class PauseMenuScreen implements Screen {
     private boolean showMessage = false;
     private float messageDisplayTime = 2f;
     private float elapsedTime = 0;
-    private final InGameScreen ing3;
+    private final InGameScreen3 ing3;
     private final InGameScreen2 ing2;
     private final
     InGameScreen1 ing1;
     Table table;
     String filename;
-    public PauseMenuScreen(Main main, final int level, final List<Pigs> pigs1, final List<woodenBrick> bricks1, final List<GlassBlock> glassBlocks1, final List<SquareGlasses> squareGlasses1, final List<SteelBlock> steelBlocks1, final int noOfBirds,  InGameScreen1 ing11,  InGameScreen ing31,  InGameScreen2 ing21){
+    public PauseMenuScreen(Main main, final int level, final List<Pigs> pigs1, final List<woodenBrick> bricks1, final List<GlassBlock> glassBlocks1, final List<SquareGlasses> squareGlasses1, final List<SteelBlock> steelBlocks1, final int noOfBirds,  InGameScreen1 ing11,  InGameScreen3 ing31,  InGameScreen2 ing21){
         this.game=main;
         this.ing1=ing11;
         this.ing2=ing21;
